@@ -26,16 +26,24 @@ Widget::Widget(QWidget *parent)
     QVBoxLayout *mainLayout = new QVBoxLayout( this );
     QHBoxLayout *topLayout = new QHBoxLayout( this );
     QVBoxLayout *srcLeftCol = new QVBoxLayout( this );
+    QHBoxLayout *srcLeftScreen = new QHBoxLayout( this );
+    QHBoxLayout *srcLeftOpenButton = new QHBoxLayout( this );
     QVBoxLayout *targetRightCol = new QVBoxLayout( this );
+    QHBoxLayout *targetRightScreen = new QHBoxLayout( this );
+    QHBoxLayout *targetRightOpenButton = new QHBoxLayout( this );
 
     // apply these layouts
-    srcLeftCol->addWidget( srcVideoBox );
-    srcLeftCol->addWidget( openSrcButton );
-    srcLeftCol->setAlignment( Qt::AlignHCenter );
+    srcLeftScreen->addWidget( srcVideoBox );
+    srcLeftOpenButton->addWidget( openSrcButton );
+    srcLeftOpenButton->setAlignment( Qt::AlignHCenter );
+    srcLeftCol->addLayout( srcLeftScreen );
+    srcLeftCol->addLayout( srcLeftOpenButton );
 
-    targetRightCol->addWidget( targetVideoBox );
-    targetRightCol->addWidget( openTargetButton );
-    targetRightCol->setAlignment( Qt::AlignHCenter );
+    targetRightScreen->addWidget( targetVideoBox );
+    targetRightOpenButton->addWidget( openTargetButton );
+    targetRightOpenButton->setAlignment( Qt::AlignHCenter );
+    targetRightCol->addLayout( targetRightScreen );
+    targetRightCol->addLayout( targetRightOpenButton );
 
     topLayout->addLayout( srcLeftCol );
     topLayout->addLayout( targetRightCol );
@@ -63,7 +71,7 @@ void Widget::openSrcClicked( )
                 this,
                 tr( "open files" ),
                 ".",
-                tr( "image files(*.jpg *.png)" ) );
+                tr( "avi files(*.avi)" ) );
     srcVideoBox->loadVideos( tmp );
 }
 void Widget::openTargetClicked( )
@@ -72,6 +80,6 @@ void Widget::openTargetClicked( )
                 this,
                 tr( "open files" ),
                 ".",
-                tr( "image files(*.jpg *.png)" ) );
+                tr( "avi files(*.avi)" ) );
     targetVideoBox->loadVideos( tmp );
 }
