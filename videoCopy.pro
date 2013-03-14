@@ -18,3 +18,11 @@ SOURCES += main.cpp\
 
 HEADERS  += widget.h \
     opencvvideobox.h
+
+INCLUDEPATH += C:\opencv\install\include \
+				C:\opencv\install\include\opencv
+
+LIBS += -LC:/opencv/install/lib \
+		-llibopencv_core244d \
+		-llibopencv_highgui244d \
+		-llibopencv_imgproc244d
