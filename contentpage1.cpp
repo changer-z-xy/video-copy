@@ -1,4 +1,4 @@
-#include "widget.h"
+#include "contentpage1.h"
 #include "opencvvideobox.h"
 #include <QPushButton>
 #include <QImage>
@@ -6,9 +6,13 @@
 #include <QHBoxLayout>
 #include <QFileDialog>
 
-Widget::Widget(QWidget *parent)
+ContentPage1::ContentPage1(QWidget *parent)
     : QWidget(parent)
 {
+    // set no window title bar
+    setWindowFlags( Qt::FramelessWindowHint );
+    setAttribute(Qt::WA_TranslucentBackground);
+
     // new objects(widgets)
     srcVideoBox = new opencvVideoBox( this );
     targetVideoBox = new opencvVideoBox( this );
@@ -54,18 +58,18 @@ Widget::Widget(QWidget *parent)
     setLayout( mainLayout );
 }
 
-Widget::~Widget()
+ContentPage1::~ContentPage1()
 {
-    
+
 }
 
-bool Widget::cmpVideos()
+bool ContentPage1::cmpVideos()
 {
     return false;
 }
 
 // these two functions should be changed
-void Widget::openSrcClicked( )
+void ContentPage1::openSrcClicked( )
 {
     QString tmp = QFileDialog::getOpenFileName(
                 this,
@@ -74,7 +78,7 @@ void Widget::openSrcClicked( )
                 tr( "avi files(*.avi)" ) );
     srcVideoBox->loadVideos( tmp );
 }
-void Widget::openTargetClicked( )
+void ContentPage1::openTargetClicked( )
 {
     QString tmp = QFileDialog::getOpenFileName(
                 this,

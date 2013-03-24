@@ -1,17 +1,17 @@
-#ifndef WIDGET_H
-#define WIDGET_H
+#ifndef CONTENTPAGE1_H
+#define CONTENTPAGE1_H
 
 #include <QWidget>
 #include <QPushButton>
 #include "opencvvideobox.h"
 
-class Widget : public QWidget
+class ContentPage1 : public QWidget
 {
     Q_OBJECT
     
 public:
-    Widget(QWidget *parent = 0);
-    ~Widget();
+    ContentPage1(QWidget *parent = 0);
+    ~ContentPage1();
 
 private slots:
     bool cmpVideos( );
@@ -26,4 +26,4 @@ private:
     opencvVideoBox *targetVideoBox;
 };
 
-#endif // WIDGET_H
+#endif // CONTENTPAGE1_H
