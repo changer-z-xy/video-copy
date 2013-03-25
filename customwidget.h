@@ -5,6 +5,7 @@
 #include <QVBoxLayout>
 #include <QToolBar>
 #include <QStatusBar>
+#include <QDebug>
 #include "customtitlebar.h"
 #include "customtoolbar.h"
 #include "customcontentwidget.h"
@@ -18,14 +19,16 @@ private:
     CustomToolBar *myToolBar;
     CustomContentWidget *myContentWidget;
     CustomStatusBar *myStatusBar;
+    unsigned int myResizeFlag;
+    QPoint cursor;
 public:
     CustomWidget(QWidget *parent = 0);
     ~CustomWidget();
 protected:
     void paintEvent(QPaintEvent *);
-//    void mouseReleaseEvent(QMouseEvent *event);
-//    void mouseMoveEvent(QMouseEvent *event);
-//    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent( QMouseEvent *event );
+    void mouseMoveEvent( QMouseEvent *event );
+    void mousePressEvent( QMouseEvent *event );
 public slots:
     void showMaxRestore();
 };

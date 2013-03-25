@@ -3,6 +3,7 @@
 CustomToolBar::CustomToolBar(QWidget *parent)
     : QWidget( parent )
 {
+    setFixedHeight( 80 );
     QHBoxLayout *toolBarLayout = new QHBoxLayout( this );
     QList<QString> strList;
     strList << "test1" << "test2" << "test3" << "test4";
@@ -15,8 +16,13 @@ CustomToolBar::CustomToolBar(QWidget *parent)
         toolBarLayout->addWidget( listCustomButton.at( i ) );
     }
     toolBarLayout->addStretch();
+    setContentsMargins( 0, 0, 0, 0 );
 }
 
 CustomToolBar::~CustomToolBar()
+{
+}
+
+void CustomToolBar::paintEvent(QPaintEvent *event)
 {
 }

@@ -2,6 +2,7 @@
 #define CUSTOMSTATUSBAR_H
 
 #include <QStatusBar>
+#include <QPainter>
 
 class CustomStatusBar : public QWidget
 {
@@ -12,6 +13,9 @@ public:
 signals:
     
 public slots:
+
+protected:
+    void paintEvent( QPaintEvent *event );
     
 };
 

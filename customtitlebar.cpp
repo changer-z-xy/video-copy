@@ -3,16 +3,24 @@
 CustomTitleBar::CustomTitleBar( QWidget *parent ) :
     parent( parent )
 {
-    icon = new QPixmap( ":/img/icon.jpg" );
+    // set fixed height
+    setFixedHeight( 30 );
+    // set icon
+    QPixmap icon( ":/img/icon.jpg" );
+    iconLabel = new QLabel( this );
+    iconLabel->setPixmap( icon );
+    // set text title
     parent->setWindowTitle( "video copy detection");
-
     titleLabel = new QLabel( parent->windowTitle() );
+    // set min button
     minButton = new QToolButton( this );
     QPixmap minPix = style()->standardPixmap( QStyle::SP_TitleBarMinButton );
     minButton->setIcon( minPix );
+    // set max/restore button
     maxButton = new QToolButton( this );
     QPixmap maxPix = style()->standardPixmap( QStyle::SP_TitleBarMaxButton );
     maxButton->setIcon( maxPix );
+    // set close button
     closeButton = new QToolButton( this );
     QPixmap closePix = style()->standardPixmap( QStyle::SP_TitleBarCloseButton );
     closeButton->setIcon( closePix );
@@ -39,17 +47,10 @@ CustomTitleBar::~CustomTitleBar()
 
 }
 
-void CustomTitleBar::mousePressEvent(QMouseEvent *event)
+void CustomTitleBar::mouseDoubleClickEvent( QMouseEvent *event )
 {
     if ( event->button() == Qt::LeftButton ) {
-        cursor = mapToParent( event->globalPos() - parent->pos() );
-    }
-}
-
-void CustomTitleBar::mouseMoveEvent(QMouseEvent *event)
-{
-    if ( !parent->isMaximized() && ( event->buttons() & Qt::LeftButton ) ) {
-        parent->move( event->globalPos() - cursor );
+        emit maxButton->clicked();
     }
 }
 

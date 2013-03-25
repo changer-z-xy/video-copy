@@ -16,8 +16,7 @@ class CustomTitleBar : public QWidget
     Q_OBJECT
 private:
     QWidget *parent;
-    QPoint cursor;
-    QPixmap *icon;
+    QLabel *iconLabel;
     QLabel *titleLabel;
     QToolButton *minButton;
     QToolButton *maxButton;
@@ -34,8 +33,7 @@ signals:
 public slots:
     
 protected:
-    void mousePressEvent( QMouseEvent *event );
-    void mouseMoveEvent( QMouseEvent *event );
+    void mouseDoubleClickEvent( QMouseEvent * );
 };
 
 #endif // MYTITLEBAR_H

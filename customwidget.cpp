@@ -8,6 +8,9 @@ CustomWidget::CustomWidget(QWidget *parent)
     // set no system title bar
     setWindowFlags( Qt::FramelessWindowHint );
 
+    // set myResizeFlag with 0
+    myResizeFlag = 0;
+
     QVBoxLayout *mainLayout = new QVBoxLayout( this );
     // add myTitleBar
     myTitleBar = new CustomTitleBar( this );
@@ -18,8 +21,6 @@ CustomWidget::CustomWidget(QWidget *parent)
     // add myContentWidget
     myContentWidget = new CustomContentWidget( this );
     mainLayout->addWidget( myContentWidget );
-    // add Stretch
-    mainLayout->addStretch();
     // add myStatusBar
     myStatusBar = new CustomStatusBar( this );
     mainLayout->addWidget( myStatusBar );
@@ -28,10 +29,10 @@ CustomWidget::CustomWidget(QWidget *parent)
     mainLayout->setContentsMargins(0,0,0,0);
 
     setStyleSheet("CustomWidget {"
-                  "background-image:url(:/img/background.jpg);"
-                  "border:1px solid black;}");
-    setMinimumWidth(850);
-    setMinimumHeight(600);
+                  "border-image:url(:/img/background.jpg);"
+                  "}");
+    setMinimumWidth( 850 );
+    setMinimumHeight( 600 );
 }
 
 CustomWidget::~CustomWidget()
@@ -41,12 +42,12 @@ CustomWidget::~CustomWidget()
 
 void CustomWidget::paintEvent(QPaintEvent *)
 {
-//    QBitmap *objBitmap = new QBitmap( size() );
-//    QPainter *painter = new QPainter( objBitmap );
-//    painter->fillRect( rect(), Qt::white );
-//    painter->setBrush( QColor( 0, 0, 0 ) );
-//    painter->drawRoundedRect( this->rect(), 10, 10 );
-//    setMask( *objBitmap );
+    QBitmap *objBitmap = new QBitmap( size() );
+    QPainter *painter = new QPainter( objBitmap );
+    painter->fillRect( rect(), Qt::white );
+    painter->setBrush( QColor( 0, 0, 0 ) );
+    painter->drawRoundedRect( this->rect(), 10, 10 );
+    setMask( *objBitmap );
 }
 
 void CustomWidget::showMaxRestore()
@@ -58,4 +59,23 @@ void CustomWidget::showMaxRestore()
     else {
         this->showMaximized();
     }
+}
+
+void CustomWidget::mousePressEvent(QMouseEvent *event)
+{
+    if ( event->button() == Qt::LeftButton ) {
+        cursor = event->globalPos() - pos();
+    }
+}
+
+void CustomWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    if ( !isMaximized() && ( event->buttons() & Qt::LeftButton ) ) {
+        move( event->globalPos() - cursor );
+    }
+}
+
+void CustomWidget::mouseReleaseEvent( QMouseEvent *event )
+{
+
 }
