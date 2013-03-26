@@ -90,6 +90,10 @@ SOURCE=.\Get_Frame.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\key_frame.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\main.cpp
 # End Source File
 # Begin Source File

@@ -1,17 +1,43 @@
 #include "C:\Documents and Settings\Administrator\My Documents\GitHub\video-copy\video_copy.h"
 
-bm_process::bm_process(char* pbuf){
+
+void show_lhsv(int a[10][5][5]){
+	for(int h=0;h<10;h++)
+		for(int s=0;s<5;s++)
+			for(int v=0;v<5;v++)
+			{
+				cout<<a[h][s][v]<<" ";
+			}
+}
+void init_lhsv(int a[10][5][5]){
+	for(int h=0;h<10;h++)
+		for(int s=0;s<5;s++)
+			for(int v=0;v<5;v++)
+			{
+				a[h][s][v]=0;
+			}
+}
+
+bm_process::~bm_process(){
+	//
+	//	delete[] this->hsv;
+	//
+}
+
+bm_process::bm_process(char* pbuf,float pst){
 	BITMAPINFOHEADER* head=(BITMAPINFOHEADER*)pbuf;
 	//save some info
 	this->height=head->biHeight;
 	this->width=head->biWidth;
 	this->bitcount=head->biBitCount;
+	this->iskframe=false;
+	this->pst=pst;
 
 	int lineByte=(this->width*this->bitcount/8+3)/4*4;//align to 4 times
 
 //
-	cout<<"allocate heap"<<endl;
-	cout<<this->width*this->height*3<<endl;
+//	cout<<"allocate heap"<<endl;
+//	cout<<this->width*this->height*3<<endl;
 //
 
 	this->a=new unsigned char[this->width*this->height*3];//allocate an array for storing pixel
@@ -20,18 +46,58 @@ bm_process::bm_process(char* pbuf){
 	//scan mem and read bitmap
 	unsigned char m;
 	for(int i=0;i<this->height;i++){
-		if(i>2) break;
 		for(int j=0;j<this->width;j++){
 			for(int k=0;k<3;k++){
 				m=*(pbuf+i*lineByte+j*3+k);
+			//	printf("%2.2x ",m);
 				this->a[total++]=m;
 			}
 		}
+	//	printf("-------------\n");
+	//	getchar();
+	}
+//	delete[] pbuf; how to delete this buf?
+}
+
+bm_process::bm_process(char* pbuf){
+	BITMAPINFOHEADER* head=(BITMAPINFOHEADER*)pbuf;
+	//save some info
+	this->height=head->biHeight;
+	this->width=head->biWidth;
+	this->bitcount=head->biBitCount;
+	this->iskframe=false;
+
+	int lineByte=(this->width*this->bitcount/8+3)/4*4;//align to 4 times
+
+//
+//	cout<<"allocate heap"<<endl;
+//	cout<<this->width*this->height*3<<endl;
+//
+
+	this->a=new unsigned char[this->width*this->height*3];//allocate an array for storing pixel
+	long total=0;
+	pbuf+=sizeof(BITMAPINFOHEADER);//skip the bitmapinfoheader
+	//scan mem and read bitmap
+	unsigned char m;
+	for(int i=0;i<this->height;i++){
+		for(int j=0;j<this->width;j++){
+			for(int k=0;k<3;k++){
+				m=*(pbuf+i*lineByte+j*3+k);
+			//	printf("%2.2x ",m);
+				this->a[total++]=m;
+			}
+		}
+	//	printf("-------------\n");
+	//	getchar();
 	}
 //	delete[] pbuf; how to delete this buf?
 }
 void bm_process::change_hsv(){
 	this->hsv=new float[this->width*this->height*3];
+	if(this->hsv==NULL){
+		cout<<"allocate mem error!!"<<endl;
+		return;
+	}
 	float h,s,v;
 	for(int i=0;i<this->width*this->height*3;i+=3){
 		pixel_hsv(
@@ -43,9 +109,9 @@ void bm_process::change_hsv(){
 		this->hsv[i+1]=s;
 		this->hsv[i+2]=v;
 /*
-		printf("%4.4f %4.4f %4.4f\n",a[i]/255.0,a[i+1]/255.0,a[i+2]/255.0);
+		printf("%4d %4d %4d\n",a[i],a[i+1],a[i+2]);
 		printf("%4.4f %4.4f %4.4f\n",h,s,v);
-		getchar();
+		if(i%100==0) getchar();
 */
 	}
 	delete[] this->a;
@@ -53,31 +119,40 @@ void bm_process::change_hsv(){
 //////color space
 void bm_process::readall(){
 	int i=0;
+	int count=0;
+	//for(int j=0;j<9;j++) init_lhsv(this->lhsv[i]);
 	memset(this->lhsv,0,sizeof(this->lhsv));
-	for(i;i<this->height*3/11*this->width;i+=this->width){
+	for(i;i<this->height*3/11*this->width*3;i+=this->width*3){
 		this->readline(i,this->lhsv[0],this->lhsv[1],this->lhsv[2]);
 	}
-	for(i;i<this->height*8/11*this->width;i+=this->width){
+	for(i;i<this->height*8/11*this->width*3;i+=this->width*3){
 		this->readline(i,this->lhsv[3],this->lhsv[4],this->lhsv[5]);
 	}
-	for(i;i<this->height*11/11*this->width;i+=this->width){
+	for(i;i<this->height*11/11*this->width*3;i+=this->width*3){
 		this->readline(i,this->lhsv[6],this->lhsv[7],this->lhsv[8]);
 	}
+	/*
+	for(i=0;i<9;i++)
+	{
+		show_lhsv(this->lhsv[i]);
+		cout<<endl;
+		getchar();
+	}
+	*/
 }
 
 void bm_process::readline(int h,int a[10][5][5],int b[10][5][5],int c[10][5][5]){
-	int base=h*this->width;
-	int i=base;
-	
-	for(i;i<this->width*3/11*3;i+=3){
+	int i=h;
+	int base=h;
+	for(i;i<this->width*3/11*3+base;i+=3){
 		float h,s,v;
 		h=this->hsv[i];
 		s=this->hsv[i+1];
 		v=this->hsv[i+2];
+	//	cout<<"h:"<<h<<"  s:"<<s<<"  v:"<<v<<endl;
 		a[lhsv_h(h)][lhsv_sv(s)][lhsv_sv(v)]++;
 	}
-
-	for(i;i<this->width*8/11*3;i+=3){
+	for(i;i<this->width*8/11*3+base;i+=3){
 		float h,s,v;
 		h=this->hsv[i];
 		s=this->hsv[i+1];
@@ -85,7 +160,7 @@ void bm_process::readline(int h,int a[10][5][5],int b[10][5][5],int c[10][5][5])
 		b[lhsv_h(h)][lhsv_sv(s)][lhsv_sv(v)]++;
 	}
 
-	for(i;i<this->width*3;i+=3){
+	for(i;i<this->width*3+base;i+=3){
 		float h,s,v;
 		h=this->hsv[i];
 		s=this->hsv[i+1];
@@ -100,55 +175,100 @@ void bm_process::readline(int h,int a[10][5][5],int b[10][5][5],int c[10][5][5])
 void bm_process::make_hgram()//make all 9 histogram
 {
 	this->block_size[0]=this->block_size[2]=this->block_size[6]=this->block_size[8]=(3*this->height/11)*(3*this->width/11);
-	this->block_size[1]=this->block_size[7]=(5/11*this->width)*(3/11*this->height);
-	this->block_size[3]=this->block_size[5]=(3/11*this->width)*(5/11*this->height);
-	this->block_size[4]=(5/11*this->width)*(5/11*this->height);
+	this->block_size[1]=this->block_size[7]=(5*this->width/11)*(3*this->height/11);
+	this->block_size[3]=this->block_size[5]=(3*this->width/11)*(5*this->height/11);
+	this->block_size[4]=(5*this->width/11)*(5*this->height/11);
 
 	for(int i=0;i<9;i++){
 		ahsv ahl[250];
+	//	cout<<"make_ahsvl"<<endl;
 		this->make_ahsvl(ahl,this->lhsv[i]);
+	//	cout<<"sort_ahsvl"<<endl;
 		this->sort_ahsvl(ahl,250);
-		for(int j=0;j<250;j++){
-			if(!this->jahsv(ahl[j])) ahl[j].count=0;
+/*
+		for(int l=0;l<250;l++) cout<<ahl[l].count<<" ";
+		cout<<endl;
+		getchar();
+*/
+		int j=0;
+		//if judge little ahsv left
+		/*
+		cout<<"jahsv"<<endl;
+		for(j;j<250;j++){
+			if(!this->jahsv(ahl[j],i)) ahl[j].count=0;
 		}
+		cout<<"sort_ahsvl again"<<endl;
 		this->sort_ahsvl(ahl,250);
+		*/
+		///
+
+/*
+		for(int l=0;l<250;l++) cout<<ahl[l].count<<" ";
+		cout<<endl;
+		getchar();
+*/
+
+		//expand to three point of color
+		/*
 		for(j=0;j<100;j++){
 			int h=ahl[j].h-1;
 			int s=ahl[j].s-1;
 			int v=ahl[j].v-1;
-			for(h;h<h+3;h++){
+			for(h;h<ahl[j].h+2;h++){
 				if(h<0||h>9) continue;
-				for(s;s<s+3;s++){
+				for(s;s<ahl[j].s+2;s++){
 					if(s<0||s>4) continue;
-					for(v;v<v+3;v++){
+					for(v;v<ahl[j].v+2;v++){
 						if(v<0||v>4) continue;
 						ahl[j].count+=this->lhsv[i][h][s][v];
 					}
 				}
 			}
 		}
-		this->sort_ahsvl(ahl,100);
-		this->ahsvl_hgram(ahl,this->hgram[i],this->block_size[i]);
+		
+		*/
 
+/*
+		for(int l=0;l<250;l++) cout<<ahl[l].count<<" ";
+		cout<<endl;
+		getchar();
+*/
+
+	//	cout<<"sort_ahsvl 100"<<endl;
+//		this->sort_ahsvl(ahl,100);
+	//	cout<<"ahsvl_hgram"<<"  sizeof(hgram[i] )"<<sizeof(this->hgram[i])<<endl;
+		memset(this->hgram[i],0,sizeof(this->hgram[i]));
+		this->ahsvl_hgram(ahl,this->hgram[i],this->block_size[i]);
 	}
+
+	delete[] this->hsv;
 }
-bool bm_process::jahsv(ahsv a)//judge if the ahsv is legal
+bool bm_process::jahsv(ahsv a,int block)//judge if the ahsv is legal
 {
-for(int j=0;j<100;j++){
+	int h=a.h;
+	int s=a.s;
+	int v=a.v;
+	if(h-1>=0&&this->lhsv[block][h-1][s][v]<a.count*0.2) return false;
+	if(s-1>=0&&this->lhsv[block][h][s-1][v]<a.count*0.2) return false;
+	if(v-1>=0&&this->lhsv[block][h][s][v-1]<a.count*0.2) return false;
+	if(h+1<10&&this->lhsv[block][h+1][s][v]<a.count*0.2) return false;
+	if(s+1<5&&this->lhsv[block][h][s+1][v]<a.count*0.2) return false;
+	if(v+1<5&&this->lhsv[block][h][s][v+1]<a.count*0.2) return false;
+	/*
 			int h=a.h-1;
 			int s=a.s-1;
 			int v=a.v-1;
-			for(h;h<h+3;h++){
+			for(h;h<a.h+2;h++){
 				if(h<0||h>9) continue;
-				for(s;s<s+3;s++){
+				for(s;s<a.s+2;s++){
 					if(s<0||s>4) continue;
-					for(v;v<v+3;v++){
+					for(v;v<a.v+2;v++){
 						if(v<0||v>4) continue;
-						if(this->lhsv[j][h][s][v]<a.count*0.2) return false;
+						if(this->lhsv[block][h][s][v]<a.count*0.2) return false;
 					}
 				}
 			}
-}
+			*/
 return true;
 }
 void bm_process::make_ahsvl(ahsv* ahl,int hsv_space[10][5][5])// color space to ahsvlist
@@ -158,11 +278,14 @@ void bm_process::make_ahsvl(ahsv* ahl,int hsv_space[10][5][5])// color space to 
 		for(int s=0;s<5;s++)
 			for(int v=0;v<5;v++){
 				ahl[c].count=hsv_space[h][s][v];
+				ahl[c].h=h;
+				ahl[c].s=s;
+				ahl[c].v=v;
 				c++;
 			}
 }
 int cmp(const void* a,const void* b){
-	return (*(ahsv*)a).count-(*(ahsv*)b).count;
+	return (*(ahsv*)b).count-(*(ahsv*)a).count;
 }
 void bm_process::sort_ahsvl(ahsv* ahl,int num)//sort ahsvlist
 {
@@ -170,11 +293,13 @@ void bm_process::sort_ahsvl(ahsv* ahl,int num)//sort ahsvlist
 }
 void bm_process::ahsvl_hgram(ahsv* ahl,float* hgram,int all_pixel)//ahsvlist to histogram
 {
-	memset(hgram,0,sizeof(hgram));
-	for(int i=0;i<20;i++){
+//	cout<<"ahl[0]->count "<<ahl[0].count<<"  "<<"all_pixel "<<all_pixel<<endl;
+	for(int i=0;i<100;i++){
 		int temp=ahl[i].h*25+ahl[i].s*5+ahl[i].v;
-		hgram[temp]=ahl[i].count/all_pixel;
+		hgram[temp]=((float)ahl[i].count)/all_pixel;
+//		cout<<((float)ahl[i].count)/all_pixel<<" ";
 	}
+//	getchar();
 }
 
 ////color object end

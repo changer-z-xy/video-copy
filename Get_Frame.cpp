@@ -5,18 +5,24 @@
 #pragma comment(lib,"strmiids.lib")
 //void MyFreeMediaType(AM_MEDIA_TYPE &mt);
 
+
+
+
+void Get_Frame::delbuf(){
+	delete[] this->pBuffer;
+}
 char* Get_Frame::buf_position(double pst){
 long size;
 HRESULT hr = this->pDet->GetBitmapBits(pst, &size, 0, this->width, this->height);
 if (SUCCEEDED(hr)) 
 {
-    char* pBuffer = new char[size];//allocate an area in heap
-    if (!pBuffer){
+    this->pBuffer = new char[size];//allocate an area in heap
+    if (!this->pBuffer){
 		cout<<"error1"<<endl;
         return NULL;
 	}
     try {
-        hr = pDet->GetBitmapBits(pst, 0, pBuffer, width, height);
+        hr = pDet->GetBitmapBits(pst, 0, this->pBuffer, width, height);
 		/*
 		int m;
 		for(int i=0;i<1000;i++){
@@ -25,11 +31,12 @@ if (SUCCEEDED(hr))
 		if(i+1%16==0) cout<<endl;
 		
 	}*/
-		return pBuffer;
+		if(FAILED(hr)) return NULL;
+		return this->pBuffer;
     }
     catch (...) {
 		cout<<"error2"<<endl;
-        delete [] pBuffer;
+        delete [] this->pBuffer;
 		return NULL;
         throw;
     }
@@ -46,14 +53,13 @@ char* Get_Frame::pop_buf(){
 		return NULL;
 	}
 	else{
+		this->position+=Sfra/this->dRate;
 		char* pBuffer=this->buf_position(this->position);
-		this->position+=1/this->dRate;
 		return pBuffer;
 	}
 }
 
 HRESULT Get_Frame::sF_position(double pst,char* save_dir){//save file at special position
-	this->position=0;
 	char str[200];
 	sprintf(str,"%s\\%5.5f.bmp",save_dir,pst);
 	CComBSTR saveBSTR(str);

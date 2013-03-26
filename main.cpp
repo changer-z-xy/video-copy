@@ -3,17 +3,21 @@
 
 
 int main(int argc,char* argv[]){
-	char* file="f:\\龙泽萝拉.avi";
+	char* file="f:\\101次求婚2.mp4";
+	char a[90]="c:\\csene\\mp4";
 	Get_Frame abc(file);
+	key_frame kfram(abc,a);
 	
-	char* sdir="c:\\csene";
-	double t=146.0;
-//	abc.sF_position(t,sdir);
-	char* pBuffer=abc.buf_position(t);
-	bm_process aabc(pBuffer);
-	aabc.change_hsv(); 
-	aabc.readall();
-	aabc.make_hgram();
+
+	file="f:\\101次求婚2.avi";
+	char b[90]="c:\\csene\\avi";
+	Get_Frame bcd(file);
+	key_frame kfram2(bcd,b);
+	
+	cout<<"1,size: "<<kfram.flist.size()<<endl;
+	cout<<"2,size: "<<kfram2.flist.size()<<endl;
+	if(cp_video(kfram,kfram2)) cout<<"true"<<endl;
+	else cout<<"false"<<endl;
 
 	return 0;
 }
