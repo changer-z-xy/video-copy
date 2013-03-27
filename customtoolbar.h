@@ -3,6 +3,7 @@
 
 #include <QToolBar>
 #include <QHBoxLayout>
+#include <QPainter>
 #include "customtoolbutton.h"
 
 class CustomToolBar : public QWidget
@@ -17,6 +18,8 @@ signals:
     
 public slots:
     
+protected:
+    void paintEvent( QPaintEvent *event );
 };
 
 #endif // CUSTOMTOOLBAR_H

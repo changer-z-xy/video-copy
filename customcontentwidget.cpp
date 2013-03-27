@@ -6,6 +6,8 @@ CustomContentWidget::CustomContentWidget(QWidget *parent) :
     myPage1 = new ContentPage1( this );
     QHBoxLayout *mainLayout = new QHBoxLayout( this );
     mainLayout->addWidget( myPage1 );
+    mainLayout->setSpacing( 0 );
+    mainLayout->setContentsMargins( 0, 0, 0, 0 );
 }
 
 CustomContentWidget::~CustomContentWidget()
@@ -13,8 +15,7 @@ CustomContentWidget::~CustomContentWidget()
 
 }
 
-void CustomContentWidget::paintEvent(QPaintEvent *evemt)
+void CustomContentWidget::paintEvent(QPaintEvent *event)
 {
-    QPainter *painter = new QPainter;
-    painter->fillRect( rect(), Qt::yellow );
+
 }

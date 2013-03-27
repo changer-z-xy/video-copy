@@ -9,33 +9,30 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QToolButton>
+#include <QPixmap>
 #include <QStyle>
+#include "customtoolbutton.h"
 
 class CustomTitleBar : public QWidget
 {
     Q_OBJECT
 private:
     QWidget *parent;
-    QPoint cursor;
-    QPixmap *icon;
+    QLabel *iconLabel;
     QLabel *titleLabel;
-    QToolButton *minButton;
-    QToolButton *maxButton;
-    QToolButton *closeButton;
+    CustomToolButton *minButton;
+    CustomToolButton *maxButton;
+    CustomToolButton *closeButton;
 
 public:
     explicit CustomTitleBar(QWidget *parent);
-    QToolButton *getMinButton();
-    QToolButton *getMaxButton();
-    QToolButton *getCloseButton();
     ~CustomTitleBar();
 signals:
     
 public slots:
     
 protected:
-    void mousePressEvent( QMouseEvent *event );
-    void mouseMoveEvent( QMouseEvent *event );
+    void mouseDoubleClickEvent( QMouseEvent * );
 };
 
 #endif // MYTITLEBAR_H

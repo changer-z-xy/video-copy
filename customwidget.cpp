@@ -7,6 +7,10 @@ CustomWidget::CustomWidget(QWidget *parent)
 {
     // set no system title bar
     setWindowFlags( Qt::FramelessWindowHint );
+    // set mouse tracking
+    setMouseTracking( true );
+    // set myResizeFlag with 0
+    myResizeFlag = 0;
 
     QVBoxLayout *mainLayout = new QVBoxLayout( this );
     // add myTitleBar
@@ -18,20 +22,20 @@ CustomWidget::CustomWidget(QWidget *parent)
     // add myContentWidget
     myContentWidget = new CustomContentWidget( this );
     mainLayout->addWidget( myContentWidget );
-    // add Stretch
-    mainLayout->addStretch();
     // add myStatusBar
     myStatusBar = new CustomStatusBar( this );
     mainLayout->addWidget( myStatusBar );
     // set mainLayout no spacing and margin
     mainLayout->setSpacing( 0 );
     mainLayout->setContentsMargins(0,0,0,0);
-
-    setStyleSheet("CustomWidget {"
-                  "background-image:url(:/img/background.jpg);"
-                  "border:1px solid black;}");
-    setMinimumWidth(850);
-    setMinimumHeight(600);
+    /* this stylesheet didn't show because paintEvent() has
+    ** repaint the widget
+    **/
+//    setStyleSheet( "CustomWidget {"
+//                   "border-image:url(:/img/background.jpg);"
+//                   "}" );
+    setMinimumWidth( 850 );
+    setMinimumHeight( 600 );
 }
 
 CustomWidget::~CustomWidget()
@@ -41,21 +45,47 @@ CustomWidget::~CustomWidget()
 
 void CustomWidget::paintEvent(QPaintEvent *)
 {
-//    QBitmap *objBitmap = new QBitmap( size() );
-//    QPainter *painter = new QPainter( objBitmap );
-//    painter->fillRect( rect(), Qt::white );
-//    painter->setBrush( QColor( 0, 0, 0 ) );
-//    painter->drawRoundedRect( this->rect(), 10, 10 );
-//    setMask( *objBitmap );
+    QBitmap objBitmap( size() );
+    QPainter *painter = new QPainter( this );
+    QLinearGradient mainWidgetGradient( rect().topLeft(), rect().bottomRight() );
+    mainWidgetGradient.setColorAt( 0, QColor( 0, 136, 204, 180 ) );
+    mainWidgetGradient.setColorAt( 0.5, QColor( 0, 109, 204, 255 ) );
+    mainWidgetGradient.setColorAt( 1, QColor( 0, 68, 205, 220 ) );
+    painter->fillRect( rect(), mainWidgetGradient );
+    painter->end();
+    painter->begin( &objBitmap );
+    painter->fillRect( rect(), Qt::white );
+    painter->setBrush( QColor( 0, 0, 0 ) );
+    painter->drawRoundedRect( rect(), 10, 10 );
+    setMask( objBitmap );
+    painter->end();
 }
 
 void CustomWidget::showMaxRestore()
 {
     if ( isMaximized() ) {
-
         this->showNormal();
     }
     else {
         this->showMaximized();
     }
+}
+
+void CustomWidget::mousePressEvent(QMouseEvent *event)
+{
+    if ( event->button() == Qt::LeftButton ) {
+        cursor = event->globalPos() - pos();
+    }
+}
+
+void CustomWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    if ( !isMaximized() && ( event->buttons() & Qt::LeftButton ) ) {
+        move( event->globalPos() - cursor );
+    }
+}
+
+void CustomWidget::mouseReleaseEvent( QMouseEvent *event )
+{
+
 }

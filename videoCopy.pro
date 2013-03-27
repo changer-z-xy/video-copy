@@ -13,24 +13,24 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-    opencvvideobox.cpp \
     customwidget.cpp \
     customtoolbutton.cpp \
     customtoolbar.cpp \
     customtitlebar.cpp \
     customstatusbar.cpp \
     customcontentwidget.cpp \
-    contentpage1.cpp
+    contentpage1.cpp \
+    histgramwidget.cpp
 
 HEADERS  += \
-    opencvvideobox.h \
     customwidget.h \
     customtoolbutton.h \
     customtoolbar.h \
     customtitlebar.h \
     customstatusbar.h \
     customcontentwidget.h \
-    contentpage1.h
+    contentpage1.h \
+    histgramwidget.h
 
 INCLUDEPATH += C:\opencv\install\include \
 				C:\opencv\install\include\opencv
@@ -42,3 +42,5 @@ LIBS += -LC:/opencv/install/lib \
 
 RESOURCES += \
     resources.qrc
+
+FORMS +=
