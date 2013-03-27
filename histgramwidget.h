@@ -19,6 +19,10 @@ protected:
 private:
     int *histArray;
     int *histSeg;
+    int cntSegs;
+    int segLength;
+    int colLength;
+    int spaceLength;
 signals:
     
 public slots:

@@ -4,6 +4,7 @@
 #include <QToolButton>
 #include <QPainter>
 #include <QMouseEvent>
+#include <QDebug>
 
 class CustomToolButton : public QToolButton
 {
@@ -19,13 +20,13 @@ public:
                            Qt::ToolButtonStyle style = Qt::ToolButtonIconOnly,
                            QWidget *parent = 0 );
 signals:
+//    void bePressed( void *self );
 protected:
     void paintEvent( QPaintEvent *event );
     void mousePressEvent( QMouseEvent *event );
-    void enterEvent( QMouseEvent *event );
-    void leaveEvent( QMouseEvent *event );
+    void enterEvent( QEvent *event );
+    void leaveEvent( QEvent *event );
     void mouseReleaseEvent( QMouseEvent *event );
-    
 };
 
 #endif // CUSTOMBUTTON_H

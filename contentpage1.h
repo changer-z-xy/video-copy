@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QPainter>
 #include <QFileDialog>
+#include <QHBoxLayout>
+#include <QGridLayout>
 #include <cstdlib>
 #include <cstdio>
 #include <QDebug>

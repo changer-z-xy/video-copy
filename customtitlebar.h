@@ -9,7 +9,9 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QToolButton>
+#include <QPixmap>
 #include <QStyle>
+#include "customtoolbutton.h"
 
 class CustomTitleBar : public QWidget
 {
@@ -18,15 +20,12 @@ private:
     QWidget *parent;
     QLabel *iconLabel;
     QLabel *titleLabel;
-    QToolButton *minButton;
-    QToolButton *maxButton;
-    QToolButton *closeButton;
+    CustomToolButton *minButton;
+    CustomToolButton *maxButton;
+    CustomToolButton *closeButton;
 
 public:
     explicit CustomTitleBar(QWidget *parent);
-    QToolButton *getMinButton();
-    QToolButton *getMaxButton();
-    QToolButton *getCloseButton();
     ~CustomTitleBar();
 signals:
     

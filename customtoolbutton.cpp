@@ -6,33 +6,38 @@ CustomToolButton::CustomToolButton( const QString &strImage,
                             QWidget *parent ) :
     QToolButton( parent ), strImage( strImage ), strInfo( strInfo )
 {
+    isOver = isPressed = false;
     setToolButtonStyle( style );
+    setMouseTracking( true );
     if ( this->toolButtonStyle() != Qt::ToolButtonTextOnly )
         setIcon( QPixmap( strImage ) );
     if ( this->toolButtonStyle() != Qt::ToolButtonIconOnly )
         setText( strInfo );
     setStyleSheet( "CustomToolButton {"
-                   "border: 0px"
+                   "border: 0px;"
                    "}");
 
 }
 
 void CustomToolButton::mousePressEvent( QMouseEvent *event )
 {
-    if ( event->button() == Qt::LeftButton )
+    if ( event->button() == Qt::LeftButton ) {
         isPressed = true;
+    }
     QToolButton::mousePressEvent( event );
 }
 
-void CustomToolButton::enterEvent( QMouseEvent *event )
+void CustomToolButton::enterEvent( QEvent *event )
 {
     isOver = true;
+    update();
     QToolButton::enterEvent( event );
 }
 
-void CustomToolButton::leaveEvent( QMouseEvent *event )
+void CustomToolButton::leaveEvent( QEvent *event )
 {
     isOver = false;
+    update();
     QToolButton::leaveEvent( event );
 }
 
@@ -44,25 +49,26 @@ void CustomToolButton::mouseReleaseEvent( QMouseEvent *event )
 
 void CustomToolButton::paintEvent( QPaintEvent *event )
 {
-    QPainter *painter = new QPainter( this );
-    QPen objPen(Qt::NoBrush,1);
-    painter->setPen(objPen);
+    QPainter painter( this );
 
-    int startOpacity = 0, endOpacity = 0;
+    int startOpacity = 0, medianOpacity = 0, endOpacity = 0;
     if ( isPressed ) {
         startOpacity = 50;
-        endOpacity = 100;
+        medianOpacity = 100;
+        endOpacity = 80;
     } else if ( isOver ) {
         startOpacity = 150;
+        medianOpacity = 180;
         endOpacity = 200;
     }
 
-    QLinearGradient objLinear(rect().topLeft(),rect().bottomLeft());
-    objLinear.setColorAt(0,QColor(150,150,150, startOpacity));
-    objLinear.setColorAt(0.5,QColor(50,50,50,255));
-    objLinear.setColorAt(1,QColor(100,100,100,endOpacity));
-    QBrush objBrush(objLinear);
-    painter->setBrush(objBrush);
-    painter->drawRoundedRect(rect(),5,5);
+    QLinearGradient mainWidgetGradient( rect().topLeft(), rect().bottomRight() );
+    mainWidgetGradient.setColorAt( 0, QColor( 136, 136, 136, startOpacity ) );
+    mainWidgetGradient.setColorAt( 0.5, QColor( 204, 204, 204, medianOpacity ) );
+    mainWidgetGradient.setColorAt( 1, QColor( 190, 190, 190, endOpacity ) );
+    QBrush mainWidgetBrush( mainWidgetGradient );
+    painter.setPen( QPen( Qt::NoBrush, 1 ) );
+    painter.setBrush( mainWidgetBrush );
+    painter.drawRoundedRect( rect(), 5, 5 );
     QToolButton::paintEvent( event );
 }

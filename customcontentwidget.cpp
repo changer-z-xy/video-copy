@@ -15,6 +15,7 @@ CustomContentWidget::~CustomContentWidget()
 
 }
 
-void CustomContentWidget::paintEvent(QPaintEvent *evemt)
+void CustomContentWidget::paintEvent(QPaintEvent *event)
 {
+
 }

@@ -6,6 +6,7 @@
 #include <QToolBar>
 #include <QStatusBar>
 #include <QDebug>
+#include <QLinearGradient>
 #include "customtitlebar.h"
 #include "customtoolbar.h"
 #include "customcontentwidget.h"

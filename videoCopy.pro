@@ -42,3 +42,5 @@ LIBS += -LC:/opencv/install/lib \
 
 RESOURCES += \
     resources.qrc
+
+FORMS +=
