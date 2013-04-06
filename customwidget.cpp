@@ -25,15 +25,14 @@ CustomWidget::CustomWidget(QWidget *parent)
     // add myStatusBar
     myStatusBar = new CustomStatusBar( this );
     mainLayout->addWidget( myStatusBar );
+
+    connect( myToolBar, SIGNAL(showPageAt(int)),
+             myContentWidget, SLOT(showPageAt(int)) );
+
     // set mainLayout no spacing and margin
     mainLayout->setSpacing( 0 );
     mainLayout->setContentsMargins(0,0,0,0);
-    /* this stylesheet didn't show because paintEvent() has
-    ** repaint the widget
-    **/
-//    setStyleSheet( "CustomWidget {"
-//                   "border-image:url(:/img/background.jpg);"
-//                   "}" );
+
     setMinimumWidth( 850 );
     setMinimumHeight( 600 );
 }

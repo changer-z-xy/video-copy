@@ -10,20 +10,15 @@
 #include <cstdio>
 #include <QDebug>
 #include "histgramwidget.h"
+#include "histgram.h"
 
-class ContentPage1 : public QWidget
+class ContentPage : public QWidget
 {
     Q_OBJECT
     
 public:
-    ContentPage1( QWidget *parent = 0 );
-    ~ContentPage1();
-protected:
-    void paintEvent( QPaintEvent *event );
-private slots:
+    ContentPage( QWidget *parent = 0 );
 
-private:
-    HistgramWidget *histView;
 };
 
 #endif // CONTENTPAGE1_H

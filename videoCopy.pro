@@ -19,8 +19,10 @@ SOURCES += main.cpp\
     customtitlebar.cpp \
     customstatusbar.cpp \
     customcontentwidget.cpp \
-    contentpage1.cpp \
-    histgramwidget.cpp
+    histgram.cpp \
+    arrowheadaxis.cpp \
+    histgramwidget.cpp \
+    contentpage.cpp
 
 HEADERS  += \
     customwidget.h \
@@ -29,8 +31,10 @@ HEADERS  += \
     customtitlebar.h \
     customstatusbar.h \
     customcontentwidget.h \
-    contentpage1.h \
-    histgramwidget.h
+    histgram.h \
+    arrowheadaxis.h \
+    histgramwidget.h \
+    contentpage.h
 
 INCLUDEPATH += C:\opencv\install\include \
 				C:\opencv\install\include\opencv

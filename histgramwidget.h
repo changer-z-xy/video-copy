@@ -2,12 +2,13 @@
 #define HistgramWidget_H
 
 #include <QWidget>
+#include <QGraphicsView>
 #include <QPainter>
 #include <QDebug>
 #include <cstdlib>
 #include <algorithm>
 
-class HistgramWidget : public QWidget
+class HistgramWidget : public QGraphicsView
 {
     Q_OBJECT
 public:

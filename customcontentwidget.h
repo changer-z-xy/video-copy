@@ -6,23 +6,21 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPainter>
-#include "contentpage1.h"
+#include "contentpage.h"
 
 class CustomContentWidget : public QWidget
 {
     Q_OBJECT
 private:
     QPixmap *myPix;
-    ContentPage1 *myPage1;
+    QVector<ContentPage *> myPages;
 public:
     explicit CustomContentWidget(QWidget *parent = 0);
     ~CustomContentWidget();
-protected:
-    void paintEvent(QPaintEvent *evemt);
-signals:
-    
 public slots:
-    
+    void showPageAt( int index );
+protected:
+    void paintEvent(QPaintEvent *event);
 };
 
 #endif // CUSTOMCONTENTWIDGET_H

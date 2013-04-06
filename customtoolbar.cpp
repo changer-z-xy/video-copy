@@ -3,6 +3,9 @@
 CustomToolBar::CustomToolBar(QWidget *parent)
     : QWidget( parent )
 {
+    // which button is pressed
+    buttonPressed = 1;
+
     QHBoxLayout *toolBarLayout = new QHBoxLayout( this );
     setFixedHeight( 100 );
     setMouseTracking( true );
@@ -16,15 +19,25 @@ CustomToolBar::CustomToolBar(QWidget *parent)
                                                    this ) );
         toolBarLayout->addWidget( listCustomButton.at( i ) );
         listCustomButton.at( i )->setIconSize( QSize( 60, 60 ) );
+        connect( listCustomButton.at( i ), SIGNAL(bePressed(CustomToolButton*)),
+                 this, SLOT(childPressed(CustomToolButton*)) );
     }
     toolBarLayout->addStretch();
     setContentsMargins( 0, 0, 0, 0 );
+
+    // custom event of button clicked
 }
 
-CustomToolBar::~CustomToolBar()
+void CustomToolBar::childPressed( CustomToolButton *child )
 {
-}
-
-void CustomToolBar::paintEvent(QPaintEvent *event)
-{
+    int index = -1;
+    for ( int i = 0, sz = listCustomButton.size(); i < sz; ++ i ) {
+        if ( listCustomButton.at( i ) != child )
+            listCustomButton[ i ]->setPressed( false );
+        else
+            index = i;
+    }
+    child->setPressed( true );
+    if ( index != -1 )
+        emit showPageAt( index );
 }

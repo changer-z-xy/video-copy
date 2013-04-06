@@ -1,7 +1,7 @@
 #include "histgramwidget.h"
 
 HistgramWidget::HistgramWidget( QWidget *parent, int *histgram = NULL ):
-    QWidget( parent ), histArray( histgram )
+    QGraphicsView( parent ), histArray( histgram )
 {
     setFixedSize( 600, 400 );
     segLength = 10;
@@ -48,4 +48,5 @@ void HistgramWidget::paintEvent( QPaintEvent *event )
         myPainter->drawText( i * colLength + spaceLength, tmpY - 20,
                              QString("%1").arg(histSeg[ i ]) );
     }
+    myPainter->end();
 }

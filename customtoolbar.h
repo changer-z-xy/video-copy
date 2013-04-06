@@ -11,15 +11,14 @@ class CustomToolBar : public QWidget
     Q_OBJECT
 private:
     QList<CustomToolButton*> listCustomButton;
+    int buttonPressed;
 public:
     explicit CustomToolBar(QWidget *parent = 0);
-    ~CustomToolBar();
 signals:
-    
+    void showPageAt( int index );
 public slots:
+    void childPressed( CustomToolButton *child );
     
-protected:
-    void paintEvent( QPaintEvent *event );
 };
 
 #endif // CUSTOMTOOLBAR_H

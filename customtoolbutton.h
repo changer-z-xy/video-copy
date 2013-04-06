@@ -19,14 +19,16 @@ public:
                            const QString &strInfo,
                            Qt::ToolButtonStyle style = Qt::ToolButtonIconOnly,
                            QWidget *parent = 0 );
+    void setPressed( bool pressed );
 signals:
-//    void bePressed( void *self );
+    void bePressed( CustomToolButton *self );
+
 protected:
     void paintEvent( QPaintEvent *event );
     void mousePressEvent( QMouseEvent *event );
     void enterEvent( QEvent *event );
     void leaveEvent( QEvent *event );
-    void mouseReleaseEvent( QMouseEvent *event );
+//    void mouseReleaseEvent( QMouseEvent *event );
 };
 
 #endif // CUSTOMBUTTON_H
