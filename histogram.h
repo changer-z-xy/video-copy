@@ -8,11 +8,11 @@
 #include <QDebug>
 #include "arrowheadaxis.h"
 
-class Histgram : public QGraphicsView
+class Histogram : public QGraphicsView
 {
     Q_OBJECT
 public:
-    explicit Histgram( int cntColumns,
+    explicit Histogram( int cntColumns,
                        double colWidth = 10,
                        QList<QGraphicsRectItem *> *cols = NULL,
                        QWidget *parent = 0 );

@@ -8,13 +8,13 @@
 #include <cstdlib>
 #include <algorithm>
 
-class HistgramWidget : public QGraphicsView
+class HistogramWidget : public QGraphicsView
 {
     Q_OBJECT
 public:
-    explicit HistgramWidget(QWidget *parent = 0);
-    HistgramWidget( QWidget *parent, int *histgram );
-    ~HistgramWidget();
+    explicit HistogramWidget(QWidget *parent = 0);
+    HistogramWidget( QWidget *parent, int *histogram );
+    ~HistogramWidget();
 protected:
     void paintEvent( QPaintEvent *event );
 private:

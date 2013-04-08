@@ -11,6 +11,9 @@ ArrowHeadAxis::ArrowHeadAxis( double axisLength, QVector<double> *graduationsPos
     arrowHead->push_back( QPointF( axisLength, -5 ) );
     arrowHead->push_back( QPointF( axisLength + 10, 0 ) );
 
+    // new graduationTexts
+    graduationTexts = new QGraphicsItemGroup( this );
+
     // set graduations
     setGraduations( graduationsPos );
 }
@@ -25,6 +28,11 @@ QPainterPath ArrowHeadAxis::shape() const
     QPainterPath myPath;
     myPath.addPolygon( *arrowHead );
     return myPath;
+}
+
+QGraphicsItemGroup * ArrowHeadAxis::getGraduationTexts()
+{
+    return graduationTexts;
 }
 
 void ArrowHeadAxis::paint(QPainter *painter,
@@ -50,7 +58,7 @@ void ArrowHeadAxis::setGraduations( QVector<double> *graduationsPos,
         }
         for ( int i = 0, sz = graduationsPos->size(); i < sz; ++ i ) {
             // set graduations with height 5
-            // graduations.at( i ) can not be used because it is const function
+            // graduations.at( i ) can not be used because it is a const function
             graduations[ i ].setLine( graduationsPos->at( i ), 0,
                                       graduationsPos->at( i ), direction * 5 );
         }

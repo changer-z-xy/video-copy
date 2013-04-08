@@ -9,8 +9,9 @@
 #include <cstdlib>
 #include <cstdio>
 #include <QDebug>
-#include "histgramwidget.h"
-#include "histgram.h"
+#include "histogramwidget.h"
+#include "histogram.h"
+#include "opencvvideobox.h"
 
 class ContentPage : public QWidget
 {

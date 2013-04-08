@@ -1,6 +1,6 @@
-#include "histgram.h"
+#include "histogram.h"
 
-Histgram::Histgram( int cntColumns, double colWidth,
+Histogram::Histogram( int cntColumns, double colWidth,
                     QList<QGraphicsRectItem *> *cols,
                     QWidget *parent )
     : cntColumns( cntColumns ),
@@ -35,7 +35,7 @@ Histgram::Histgram( int cntColumns, double colWidth,
     setScene( myScene );
 }
 
-void Histgram::setColumns( QList<double> *colHeight,
+void Histogram::setColumns( QList<double> *colHeight,
                            QList<double> *colPos )
 {
     double maxColHeight = 0, maxColPos = 0;
@@ -58,7 +58,7 @@ void Histgram::setColumns( QList<double> *colHeight,
     }
 }
 
-void Histgram::setColumn( int i, double height, double pos )
+void Histogram::setColumn( int i, double height, double pos )
 {
     // if pos < 0, for instance -1, we just let it keep its position
     if ( pos >= 0 )

@@ -11,7 +11,6 @@ class CustomToolBar : public QWidget
     Q_OBJECT
 private:
     QList<CustomToolButton*> listCustomButton;
-    int buttonPressed;
 public:
     explicit CustomToolBar(QWidget *parent = 0);
 signals:

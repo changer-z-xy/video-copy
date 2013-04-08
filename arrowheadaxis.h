@@ -21,6 +21,7 @@ public:
                         QWidget *widget );
     void setGraduations( QVector<double> *graduationsPos,
                          int direction = -1 );
+    QGraphicsItemGroup *getGraduationTexts();
     void setAxisLength( double length );
     double getAxisLength();
     void setMaxValue( double value );
@@ -32,6 +33,7 @@ private:
     QLineF *axisLine;
     double maxValue;
     QVector<QLineF> graduations;
+    QGraphicsItemGroup *graduationTexts;
 };
 
 #endif // ARROWHEAD_H

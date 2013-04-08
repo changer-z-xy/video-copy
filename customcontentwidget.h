@@ -6,13 +6,14 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPainter>
+#include <QProcess>
+#include <QtWebKitWidgets/QWebView>
 #include "contentpage.h"
 
 class CustomContentWidget : public QWidget
 {
     Q_OBJECT
 private:
-    QPixmap *myPix;
     QVector<ContentPage *> myPages;
 public:
     explicit CustomContentWidget(QWidget *parent = 0);

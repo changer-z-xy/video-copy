@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT += webkitwidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -19,10 +20,11 @@ SOURCES += main.cpp\
     customtitlebar.cpp \
     customstatusbar.cpp \
     customcontentwidget.cpp \
-    histgram.cpp \
     arrowheadaxis.cpp \
-    histgramwidget.cpp \
-    contentpage.cpp
+    contentpage.cpp \
+    histogram.cpp \
+    histogramwidget.cpp \
+    opencvvideobox.cpp
 
 HEADERS  += \
     customwidget.h \
@@ -31,10 +33,11 @@ HEADERS  += \
     customtitlebar.h \
     customstatusbar.h \
     customcontentwidget.h \
-    histgram.h \
     arrowheadaxis.h \
-    histgramwidget.h \
-    contentpage.h
+    contentpage.h \
+    histogram.h \
+    histogramwidget.h \
+    opencvvideobox.h
 
 INCLUDEPATH += C:\opencv\install\include \
 				C:\opencv\install\include\opencv
@@ -46,5 +49,3 @@ LIBS += -LC:/opencv/install/lib \
 
 RESOURCES += \
     resources.qrc
-
-FORMS +=

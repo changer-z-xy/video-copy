@@ -3,9 +3,6 @@
 CustomToolBar::CustomToolBar(QWidget *parent)
     : QWidget( parent )
 {
-    // which button is pressed
-    buttonPressed = 1;
-
     QHBoxLayout *toolBarLayout = new QHBoxLayout( this );
     setFixedHeight( 100 );
     setMouseTracking( true );
