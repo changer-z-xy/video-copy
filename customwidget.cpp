@@ -12,6 +12,9 @@ CustomWidget::CustomWidget(QWidget *parent)
     // set myResizeFlag with 0
     myResizeFlag = 0;
 
+    setMinimumWidth( 850 );
+    setMinimumHeight( 600 );
+
     QVBoxLayout *mainLayout = new QVBoxLayout( this );
     // add myTitleBar
     myTitleBar = new CustomTitleBar( this );
@@ -25,16 +28,12 @@ CustomWidget::CustomWidget(QWidget *parent)
     // add myStatusBar
     myStatusBar = new CustomStatusBar( this );
     mainLayout->addWidget( myStatusBar );
-
-    connect( myToolBar, SIGNAL(showPageAt(int)),
-             myContentWidget, SLOT(showPageAt(int)) );
-
-    // set mainLayout no spacing and margin
+    // set mainLayout without spacing and margin
     mainLayout->setSpacing( 0 );
     mainLayout->setContentsMargins(0,0,0,0);
 
-    setMinimumWidth( 850 );
-    setMinimumHeight( 600 );
+    connect( myToolBar, SIGNAL(showPageAt(int)),
+             myContentWidget, SLOT(showPageAt(int)) );
 }
 
 CustomWidget::~CustomWidget()
@@ -84,7 +83,8 @@ void CustomWidget::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
-void CustomWidget::mouseReleaseEvent( QMouseEvent *event )
+void CustomWidget::resizeEvent( QResizeEvent *event )
 {
-
+    myContentWidget->resize( width() * myContentWidget->getCntPages(), height() - STATUSBAR_HEIGHT - TITLEBAR_HEIGHT - TOOLBAR_HEIGHT );
+    QWidget::resizeEvent( event );
 }

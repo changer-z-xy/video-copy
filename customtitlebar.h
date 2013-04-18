@@ -13,6 +13,8 @@
 #include <QStyle>
 #include "customtoolbutton.h"
 
+const int TITLEBAR_HEIGHT = 30;
+
 class CustomTitleBar : public QWidget
 {
     Q_OBJECT

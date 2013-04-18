@@ -20,11 +20,12 @@ SOURCES += main.cpp\
     customtitlebar.cpp \
     customstatusbar.cpp \
     customcontentwidget.cpp \
-    arrowheadaxis.cpp \
+#    arrowheadaxis.cpp \
     contentpage.cpp \
-    histogram.cpp \
-    histogramwidget.cpp \
-    opencvvideobox.cpp
+#    histogramwidget.cpp \
+    customwebpage.cpp \
+    mplayerwidget.cpp \
+#    histogramitem.cpp
 
 HEADERS  += \
     customwidget.h \
@@ -33,11 +34,12 @@ HEADERS  += \
     customtitlebar.h \
     customstatusbar.h \
     customcontentwidget.h \
-    arrowheadaxis.h \
+#    arrowheadaxis.h \
     contentpage.h \
-    histogram.h \
-    histogramwidget.h \
-    opencvvideobox.h
+#    histogramwidget.h \
+    customwebpage.h \
+    mplayerwidget.h \
+#    histogramitem.h
 
 INCLUDEPATH += C:\opencv\install\include \
 				C:\opencv\install\include\opencv

@@ -5,3 +5,8 @@ ContentPage::ContentPage(QWidget *parent)
 {
 
 }
+
+void ContentPage::moveToLeft( int x )
+{
+    move( x, 0 );
+}

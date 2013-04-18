@@ -9,8 +9,8 @@
 #include <cstdlib>
 #include <cstdio>
 #include <QDebug>
-#include "histogramwidget.h"
-#include "histogram.h"
+//#include "histogramwidget.h"
+//#include "histogram.h"
 #include "opencvvideobox.h"
 
 class ContentPage : public QWidget
@@ -19,7 +19,8 @@ class ContentPage : public QWidget
     
 public:
     ContentPage( QWidget *parent = 0 );
-
+public slots:
+    void moveToLeft( int x );
 };
 
 #endif // CONTENTPAGE1_H

@@ -4,7 +4,7 @@ CustomToolBar::CustomToolBar(QWidget *parent)
     : QWidget( parent )
 {
     QHBoxLayout *toolBarLayout = new QHBoxLayout( this );
-    setFixedHeight( 100 );
+    setFixedHeight( TOOLBAR_HEIGHT );
     setMouseTracking( true );
     QList<QString> strList;
     strList << "视频比较" << "直方图查看" << "上传视频" << "浏览网络" << "帮助";

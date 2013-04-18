@@ -2,7 +2,7 @@
 
 CustomStatusBar::CustomStatusBar(QObject *parent)
 {
-    setFixedHeight( 30 );
+    setFixedHeight( STATUSBAR_HEIGHT );
 }
 
 CustomStatusBar::~CustomStatusBar()

@@ -4,6 +4,8 @@
 #include <QStatusBar>
 #include <QPainter>
 
+const int STATUSBAR_HEIGHT = 30;
+
 class CustomStatusBar : public QWidget
 {
     Q_OBJECT

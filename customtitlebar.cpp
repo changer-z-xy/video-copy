@@ -4,13 +4,12 @@ CustomTitleBar::CustomTitleBar( QWidget *parent ) :
     parent( parent )
 {
     // set fixed height
-    int fixedHeight = 30;
-    setFixedHeight( fixedHeight );
+    setFixedHeight( TITLEBAR_HEIGHT );
     setMouseTracking( true );
     // set icon
     QPixmap icon( ":/img/icon.png" );
     iconLabel = new QLabel( this );
-    iconLabel->setPixmap( icon.scaled( fixedHeight, fixedHeight ) );
+    iconLabel->setPixmap( icon.scaled( TITLEBAR_HEIGHT, TITLEBAR_HEIGHT ) );
     // set text title
     parent->setWindowTitle( "基于内容的视频版权注册与认证系统");
     titleLabel = new QLabel( parent->windowTitle() );

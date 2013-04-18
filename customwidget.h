@@ -27,9 +27,9 @@ public:
     ~CustomWidget();
 protected:
     void paintEvent(QPaintEvent *);
-    void mouseReleaseEvent( QMouseEvent *event );
     void mouseMoveEvent( QMouseEvent *event );
     void mousePressEvent( QMouseEvent *event );
+    void resizeEvent( QResizeEvent *event );
 public slots:
     void showMaxRestore();
 };
