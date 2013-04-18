@@ -1,24 +1,63 @@
-#include <iostream>
-#include <windows.h>
-#include <dshow.h>
-#include <qedit.h>
-#include <atlbase.h>
-#include <stdlib.h>
 
-using namespace std;
+#include "C:\Documents and Settings\Administrator\My Documents\GitHub\video-copy\video_copy.h"
+
 
 #pragma comment(lib,"strmiids.lib")
-void MyFreeMediaType(AM_MEDIA_TYPE &mt);
+//void MyFreeMediaType(AM_MEDIA_TYPE &mt);
 
-class Get_Frame{
-public:
-	CComPtr< IMediaDet > pDet;
-	long width,height,position;
-	double totalTime,dRate;
-	Get_Frame(char* file);//
-	HRESULT sF_position(double pst,char* save_dir);//save frame at a special position
-	HRESULT sF_all(char* save_dir,int stime,int etime);//save all frames
-};
+
+
+
+void Get_Frame::delbuf(){
+	delete[] this->pBuffer;
+}
+char* Get_Frame::buf_position(double pst){
+long size;
+HRESULT hr = this->pDet->GetBitmapBits(pst, &size, 0, this->width, this->height);
+if (SUCCEEDED(hr)) 
+{
+    this->pBuffer = new char[size];//allocate an area in heap
+    if (!this->pBuffer){
+		cout<<"error1"<<endl;
+        return NULL;
+	}
+    try {
+        hr = pDet->GetBitmapBits(pst, 0, this->pBuffer, width, height);
+		/*
+		int m;
+		for(int i=0;i<1000;i++){
+		m=*(pBuffer+i+sizeof(BITMAPINFOHEADER));
+		printf("%2.2x ",m);
+		if(i+1%16==0) cout<<endl;
+		
+	}*/
+		if(FAILED(hr)) return NULL;
+		return this->pBuffer;
+    }
+    catch (...) {
+		cout<<"error2"<<endl;
+        delete [] this->pBuffer;
+		return NULL;
+        throw;
+    }
+
+}
+else{
+	cout<<"cannot open file"<<endl;
+	return  NULL;
+}
+}
+char* Get_Frame::pop_buf(){
+	if(this->position>this->totalTime){
+		cout<<"this->position>this->totalTime"<<endl;
+		return NULL;
+	}
+	else{
+		this->position+=Sfra/this->dRate;
+		char* pBuffer=this->buf_position(this->position);
+		return pBuffer;
+	}
+}
 
 HRESULT Get_Frame::sF_position(double pst,char* save_dir){//save file at special position
 	char str[200];
@@ -49,7 +88,7 @@ HRESULT Get_Frame::sF_all(char* save_dir,int stime,int etime){//time(seconds),wh
 	}
 
 	for(int i=startf;i<endf;i++){
-		double position=(double)(i/dRate);
+		double position=(double)(i/this->dRate);
 		hr=this->sF_position(position,save_dir);
 		if(FAILED(hr)) return hr;
 	}
@@ -132,10 +171,6 @@ Get_Frame::Get_Frame(char* file){//initial
 }
 
 
-
-
-
-
 void MyFreeMediaType(AM_MEDIA_TYPE &mt){
 	if(mt.cbFormat!=0){
 		CoTaskMemFree((PVOID)mt.pbFormat);
@@ -148,14 +183,3 @@ void MyFreeMediaType(AM_MEDIA_TYPE &mt){
 	}
 }
 
-int main(int argc,char* argv[]){
-	char* file="f:\\abc.avi";
-	char* sdir="c:\\csene";
-	file=argv[1];
-	sdir=argv[2];
-	int st=atoi(argv[3]);
-	int ed=atoi(argv[4]);
-	Get_Frame abc(file);
-	abc.sF_all(sdir,st,ed);
-	return 0;
-}
