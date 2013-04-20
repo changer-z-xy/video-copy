@@ -6,10 +6,13 @@
 #include <QProcess>
 #include <QTimeLine>
 #include <QtWebKitWidgets/QWebView>
+#include <QMessageBox>
 #include <QPushButton>
 #include "contentpage.h"
 #include "mplayerwidget.h"
 #include "customwebpage.h"
+#include "abc.h"
+#include "copydetection.h"
 
 class CustomContentWidget : public QWidget
 {
@@ -24,6 +27,9 @@ public:
 public slots:
     void showPageAt( int index );
     void moveToLeft( int x );
+    void setSrcFile();
+    void setTargetFile();
+    void compareVideos();
 protected:
     void paintEvent(QPaintEvent *event);
     void resizeEvent( QResizeEvent *event );

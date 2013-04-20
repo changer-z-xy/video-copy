@@ -13,6 +13,7 @@ public:
     explicit MPlayerWidget(QWidget *parent = 0);
     ~MPlayerWidget();
     QProcess *getMPProcess();
+    const QString &getFilePath();
     void setFilePath( const QString &filePath );
 signals:
 

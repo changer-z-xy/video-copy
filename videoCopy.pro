@@ -26,6 +26,11 @@ SOURCES += main.cpp\
     customwebpage.cpp \
     mplayerwidget.cpp \
 #    histogramitem.cpp
+    key_frame.cpp \
+    Get_Frame.cpp \
+    bm_process.cpp \
+    copydetection.cpp \
+    detectiontread.cpp
 
 HEADERS  += \
     customwidget.h \
@@ -40,9 +45,16 @@ HEADERS  += \
     customwebpage.h \
     mplayerwidget.h \
 #    histogramitem.h
+    key_frame.h \
+    get_frame.h \
+    bm_process.h \
+    abc.h \
+    copydetection.h \
+    detectiontread.h
 
 INCLUDEPATH += C:\opencv\install\include \
-				C:\opencv\install\include\opencv
+				C:\opencv\install\include\opencv \
+				C:\opencv\install\include\opencv2
 
 LIBS += -LC:/opencv/install/lib \
 		-llibopencv_core244d \

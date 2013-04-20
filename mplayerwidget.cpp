@@ -45,6 +45,7 @@ void MPlayerWidget::load()
         QStringList argList;
         argList << "-slave" << "-quiet";
         argList << "-wid" << QString::number( this->winId() );
+        argList << "-nosound";
         argList << file;
         mpProcess->start( MPLAYER_PATH, argList );
     }
@@ -63,4 +64,9 @@ void MPlayerWidget::frame_step()
 {
     if ( mpProcess->state() == QProcess::Running )
         mpProcess->write( "frame_step\n" );
+}
+
+const QString& MPlayerWidget::getFilePath()
+{
+    return file;
 }
