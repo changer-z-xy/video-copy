@@ -9,7 +9,7 @@ public:
     char* dir;
 
 
-    key_frame( Get_Frame &video,char* sdir);
+    key_frame(Get_Frame video,char* sdir);
 };
 
 #endif // KEY_FRAME_H

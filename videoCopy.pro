@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = videoCopy
 TEMPLATE = app
-
+CONFIG -= app_bundle
 
 SOURCES += main.cpp\
     customwidget.cpp \
@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     Get_Frame.cpp \
     bm_process.cpp \
     copydetection.cpp \
-    detectiontread.cpp
+    detectiontread.cpp \
+    cmpthread.cpp
 
 HEADERS  += \
     customwidget.h \
@@ -50,7 +51,8 @@ HEADERS  += \
     bm_process.h \
     abc.h \
     copydetection.h \
-    detectiontread.h
+    detectiontread.h \
+    cmpthread.h
 
 INCLUDEPATH += C:\opencv\install\include \
 				C:\opencv\install\include\opencv \
@@ -63,3 +65,4 @@ LIBS += -LC:/opencv/install/lib \
 
 RESOURCES += \
     resources.qrc
+

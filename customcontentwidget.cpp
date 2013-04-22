@@ -1,6 +1,7 @@
 #include "customcontentwidget.h"
 
 #define __PANYUFENG__
+#define __changer_debug__
 
 void setNoSpace( QLayout *layout )
 {
@@ -187,13 +188,32 @@ void CustomContentWidget::compareVideos()
 {
     MPlayerWidget *srcmplayer = findChild<MPlayerWidget *>( "srcmplayer" );
     MPlayerWidget *targetmplayer = findChild<MPlayerWidget *>( "targetmplayer" );
+#ifdef __changer_debug__
+    QString src = "C:\\movie\\temp1.avi";
+    QString target = "C:\\movie\\temp1.avi";
+#else
+    qDebug() << srcmplayer->getFilePath().toLocal8Bit().data();
+    QString src = srcmplayer->getFilePath();
+    qDebug() << targetmplayer->getFilePath().toLocal8Bit().data();
+    QString target = targetmplayer->getFilePath();
+#endif
 
-    bool isSame = false;
+    bool isSame = true;
 #ifdef __PANYUFENG__
-    Get_Frame srcVideo( "C:\\movie\\temp.avi" );
-    key_frame srcKeyFrame( srcVideo, new char[256] );
-    Get_Frame targetVideo("C:\\movie\\temp.avi");
-    key_frame targetKeyFrame( targetVideo, new char[256] );
+    Get_Frame srcVideo( src.toLocal8Bit().data() );
+    if ( !srcVideo.cap ) {
+        qDebug() << "capture failed";
+        return ;
+    }
+    qDebug() << "srcVideo.num_frame is: " << srcVideo.num_frame;
+    key_frame srcKeyFrame( srcVideo, "" );
+    Get_Frame targetVideo( target.toLocal8Bit().data() );
+    if ( !targetVideo.cap ) {
+        qDebug() << "capture failed";
+        return ;
+    }
+    qDebug() << "targetVideo.num_frame is: " << targetVideo.num_frame;
+    key_frame targetKeyFrame( targetVideo, "" );
     isSame = cp_video( srcKeyFrame, targetKeyFrame );
 #else
     copydetection histCmpVideos;

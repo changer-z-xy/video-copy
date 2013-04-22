@@ -94,13 +94,16 @@ void bm_process::readall(){
     */
 }
 void bm_process::readallC(){
+    //此函数负责将一张IplImage提取出9个直方图
+    //本次修改以后将忽略颜色空间,仅由readline函数完成
+    //分成9块,9个直方图数组
     int i=0;
     int count=0;
-    //int lineByte=(this->width*this->bitcount/8+3)/4*4;//align to 4 times
     int lineByte=this->cvp->widthStep;
-
-
-    for(i=0;i<9;i++) memset(this->hgram[i],0,sizeof(this->hgram[i][0]));
+// changer_z_xy changed it
+// changes begin
+    for(i=0;i<9;i++) memset(this->hgram[i],0,sizeof(this->hgram[i]));
+// changes end
     for(i;i<this->height*3/11*this->width*3;i+=lineByte){
         this->readlineR(i,this->hgram[0],this->hgram[1],this->hgram[2]);
     }
@@ -162,6 +165,7 @@ void bm_process::readline(int h,int a[10][5][5],int b[10][5][5],int c[10][5][5])
     }
 }
 void bm_process::readlineR(int h,float a[250],float b[250],float c[250]){
+    //此函数负责将一行像素点提取到直方图
     int i=h;
     int base=h;
     for(i;i<this->width*3/11*3+base;i+=3){

@@ -12,7 +12,7 @@ public:
     IplImage* frame;
     CvCapture* cap;
 
-    Get_Frame( const char* fn );
+    Get_Frame(char* fn);
     IplImage* pop();
 };
 

@@ -1,10 +1,8 @@
 #include <abc.h>
-#include <QDebug>
 
-Get_Frame::Get_Frame( const char* fn )
+Get_Frame::Get_Frame(char* fn)
 {
     this->cap = cvCreateFileCapture(fn);
-    qDebug() << cap;
     //获取视频信息
     cvQueryFrame(this->cap);
     this->height= (int) cvGetCaptureProperty(this->cap, CV_CAP_PROP_FRAME_HEIGHT);
@@ -14,8 +12,13 @@ Get_Frame::Get_Frame( const char* fn )
     this->nowframe=0;
 }
 IplImage* Get_Frame::pop(){
-    for(int i=0;i<SFRA-1;i++)cvQueryFrame(this->cap);
+    for(int i=0;i<SFRA-1;i++){
+        if(this->nowframe>=this->num_frame-5) return NULL;
+        cvQueryFrame(this->cap);
+        this->nowframe++;
+    }
     this->frame=cvQueryFrame(this->cap);
+    this->nowframe++;
     return this->frame;
 
 }

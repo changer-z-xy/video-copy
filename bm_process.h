@@ -23,16 +23,16 @@ public:
     IplImage* cvp;
 
 
-    bm_process(IplImage* cvp,int h,int w);
+    bm_process(IplImage* cvp,int h,int w);//for opencv IplImage
     bm_process(char* pbuf,float pst);//read rgb array from a bitmap buffer
     bm_process(char* pbuf);
     ~bm_process();
     void change_hsv();//change rgb array to hsv array
 
     void readline(int h,int a[10][5][5],int b[10][5][5],int c[10][5][5]);
-    void readlineR(int h,float a[250],float b[250],float c[250]);
+    void readlineR(int h,float a[250],float b[250],float c[250]);//for opencv
     void readall();
-    void readallC();
+    void readallC();//for opencv
 
     void make_hgram();//make all 9 histogram
     bool jahsv(ahsv a,int block);//judge if the ahsv is legal
