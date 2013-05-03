@@ -23,15 +23,15 @@ SOURCES += main.cpp\
 #    arrowheadaxis.cpp \
     contentpage.cpp \
 #    histogramwidget.cpp \
-    customwebpage.cpp \
     mplayerwidget.cpp \
 #    histogramitem.cpp
     key_frame.cpp \
     Get_Frame.cpp \
     bm_process.cpp \
     copydetection.cpp \
-    detectiontread.cpp \
-    cmpthread.cpp
+    cmpthread.cpp \
+    custommainwidget.cpp \
+    cmpoutputwidget.cpp
 
 HEADERS  += \
     customwidget.h \
@@ -43,7 +43,6 @@ HEADERS  += \
 #    arrowheadaxis.h \
     contentpage.h \
 #    histogramwidget.h \
-    customwebpage.h \
     mplayerwidget.h \
 #    histogramitem.h
     key_frame.h \
@@ -51,8 +50,9 @@ HEADERS  += \
     bm_process.h \
     abc.h \
     copydetection.h \
-    detectiontread.h \
-    cmpthread.h
+    cmpthread.h \
+    custommainwidget.h \
+    cmpoutputwidget.h
 
 INCLUDEPATH += C:\opencv\install\include \
 				C:\opencv\install\include\opencv \

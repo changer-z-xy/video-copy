@@ -1,7 +1,7 @@
 #include "customtitlebar.h"
 
-CustomTitleBar::CustomTitleBar( QWidget *parent ) :
-    parent( parent )
+CustomTitleBar::CustomTitleBar( QWidget *parent, const QString &title ) :
+    parent(parent)
 {
     // set fixed height
     setFixedHeight( TITLEBAR_HEIGHT );
@@ -11,7 +11,7 @@ CustomTitleBar::CustomTitleBar( QWidget *parent ) :
     iconLabel = new QLabel( this );
     iconLabel->setPixmap( icon.scaled( TITLEBAR_HEIGHT, TITLEBAR_HEIGHT ) );
     // set text title
-    parent->setWindowTitle( "基于内容的视频版权注册与认证系统");
+    parent->setWindowTitle(title);
     titleLabel = new QLabel( parent->windowTitle() );
     // following three button didn't show :/img/icon.png
     // because it expired after setIcon( *Pix )

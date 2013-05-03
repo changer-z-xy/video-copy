@@ -1,6 +1,5 @@
 #include "customcontentwidget.h"
 
-#define __PANYUFENG__
 #define __changer_debug__
 
 void setNoSpace( QLayout *layout )
@@ -12,29 +11,36 @@ void setNoSpace( QLayout *layout )
 CustomContentWidget::CustomContentWidget(QWidget *parent) :
     QWidget(parent)
 {
-    resize( parent->width() * 3, parent->height() );
-    ContentPage *myPage0 = new ContentPage( this );
-    ContentPage *myPage1 = new ContentPage( this );
-    ContentPage *myPage2 = new ContentPage( this );
+    subPageWidth = parent->width();
+    subPageHeight = parent->height();
+    resize( subPageWidth * 3, subPageHeight );
+
+    cmpThread = new CmpThread(this);
+    outputText = new CmpOutputWidget;
+    outputText->hide();
+    connect(cmpThread, SIGNAL(outputNewItem()),
+            outputText, SLOT(addOutput()));
 
     // set myPage0
     // set codes begin
+    ContentPage *myPage0 = new ContentPage( this );
+
     QVBoxLayout *page0Layout = new QVBoxLayout( myPage0 );
     setNoSpace( page0Layout );
     QHBoxLayout *page0TopLayout = new QHBoxLayout;
-    setNoSpace( page0TopLayout );
+//    setNoSpace( page0TopLayout );
 
     MPlayerWidget *srcmplayer = new MPlayerWidget( myPage0 );
-    srcmplayer->setObjectName( "srcmplayer");
-    QPushButton *loadSrc = new QPushButton( "loadSrc", myPage0 );
+    srcmplayer->setObjectName("srcmplayer");
+    QPushButton *loadSrc = new QPushButton( "打开源视频", myPage0 );
     loadSrc->resize( loadSrc->sizeHint() );
     connect( loadSrc, SIGNAL(clicked()),
              this, SLOT(setSrcFile()) );
-    QPushButton *pauseSrc = new QPushButton( "pauseSrc", myPage0 );
+    QPushButton *pauseSrc = new QPushButton( "暂停源视频", myPage0 );
     pauseSrc->resize( pauseSrc->sizeHint() );
     connect( pauseSrc, SIGNAL(clicked()),
              srcmplayer, SLOT(pause()) );
-    QPushButton *stopSrc = new QPushButton( "stopSrc", myPage0 );
+    QPushButton *stopSrc = new QPushButton( "停止源视频", myPage0 );
     stopSrc->resize( stopSrc->sizeHint() );
     connect( stopSrc, SIGNAL(clicked()),
              srcmplayer, SLOT(stop()) );
@@ -54,15 +60,15 @@ CustomContentWidget::CustomContentWidget(QWidget *parent) :
 
     MPlayerWidget *targetmplayer = new MPlayerWidget( myPage0 );
     targetmplayer->setObjectName( "targetmplayer");
-    QPushButton *loadTarget = new QPushButton( "loadTarget", myPage0 );
+    QPushButton *loadTarget = new QPushButton( "打开目标视频", myPage0 );
     loadTarget->resize( loadSrc->sizeHint() );
     connect( loadTarget, SIGNAL(clicked()),
              this, SLOT(setTargetFile()) );
-    QPushButton *pauseTarget = new QPushButton( "pauseTarget", myPage0 );
+    QPushButton *pauseTarget = new QPushButton( "暂停目标视频", myPage0 );
     pauseTarget->resize( pauseTarget->sizeHint() );
     connect( pauseTarget, SIGNAL(clicked()),
              targetmplayer, SLOT(pause()) );
-    QPushButton *stopTarget = new QPushButton( "stopTarget", myPage0 );
+    QPushButton *stopTarget = new QPushButton( "停止目标视频", myPage0 );
     stopTarget->resize( stopTarget->sizeHint() );
     connect( stopTarget, SIGNAL(clicked()),
              targetmplayer, SLOT(stop()) );
@@ -80,16 +86,18 @@ CustomContentWidget::CustomContentWidget(QWidget *parent) :
     setNoSpace( targetVideoLayout );
     page0TopLayout->addLayout( targetVideoLayout );
 
-    QPushButton *cmpVideos = new QPushButton( "cmpVideos", myPage0 );
-    cmpVideos->resize( cmpVideos->sizeHint() );
-    /* here connect cmpVideos' clicked() signal to the function
-    ** used to compare two videos
-    */
-    connect( cmpVideos, SIGNAL(clicked()),
-             this, SLOT(compareVideos()) );
 
     QHBoxLayout *page0BottomLayout = new QHBoxLayout;
+    QPushButton *cmpVideos = new QPushButton( "比较视频", myPage0 );
+    cmpVideos->resize( cmpVideos->sizeHint() );
+    connect( cmpVideos, SIGNAL(clicked()),
+             this, SLOT(compareVideos()) );
     page0BottomLayout->addWidget( cmpVideos );
+    QPushButton *showOutputButton = new QPushButton("打开输出窗口", myPage0);
+    showOutputButton->resize(showOutputButton->sizeHint());
+    connect(showOutputButton, SIGNAL(clicked()),
+            this, SLOT(showOutputWidget()));
+    page0BottomLayout->addWidget(showOutputButton);
     page0BottomLayout->setAlignment( Qt::AlignHCenter );
 
     page0Layout->addLayout( page0TopLayout );
@@ -100,10 +108,14 @@ CustomContentWidget::CustomContentWidget(QWidget *parent) :
 
     // set myPage1
     // set codes begin
+    ContentPage *myPage1 = new ContentPage( this );
+
     // set codes end
 
     // set myPage2
     // set codes begin
+    ContentPage *myPage2 = new ContentPage( this );
+
     QWebView *myWebPage = new QWebView( myPage2 );
     myWebPage->setObjectName( "myWebPage" );
     // set codes end
@@ -113,7 +125,7 @@ CustomContentWidget::CustomContentWidget(QWidget *parent) :
     myPages.push_back( myPage1 );
     myPages.push_back( myPage2 );
     for ( int i = 0, sz = myPages.size(); i < sz; ++ i ) {
-        myPages.at( i )->moveToLeft( parent->width() * i );
+        myPages.at( i )->moveToLeft( subPageWidth * i );
 //        qDebug() << myPages.at( i )->x() << " " << myPages.at( i )->y();
     }
     curPageIndex = 0;
@@ -121,6 +133,7 @@ CustomContentWidget::CustomContentWidget(QWidget *parent) :
 
 CustomContentWidget::~CustomContentWidget()
 {
+    delete outputText;
 }
 
 void CustomContentWidget::paintEvent( QPaintEvent *event )
@@ -131,9 +144,6 @@ void CustomContentWidget::paintEvent( QPaintEvent *event )
 void CustomContentWidget::showPageAt( int index )
 {
     if ( index < myPages.size() && index != curPageIndex ) {
-//        qDebug() << "A: " << myPages.at( curPageIndex )->x() << " " << myPages.at( curPageIndex )->y();
-//        qDebug() << "B: " << myPages.at( index )->x() << " " << myPages.at( index )->y();
-//        qDebug() << "C: " << this->x() << " " << this->y();
         if ( index == 2 ) {
             QWebView *tmpPage = findChild<QWebView *>( "myWebPage" );
             if ( !tmpPage->url().isValid() ) {
@@ -163,7 +173,6 @@ void CustomContentWidget::resizeEvent( QResizeEvent *event )
     for ( int i = 0, sz = myPages.size(); i < sz; ++ i ) {
         myPages[ i ]->resize( pageWidth, height() );
         myPages[ i ]->moveToLeft( pageWidth * i );
-//        qDebug() << myPages.at( i )->width() << " " << myPages.at( i )->height();
     }
 
     // some special size control on child widgets
@@ -190,60 +199,44 @@ void CustomContentWidget::compareVideos()
     MPlayerWidget *targetmplayer = findChild<MPlayerWidget *>( "targetmplayer" );
 #ifdef __changer_debug__
     QString src = "C:\\movie\\temp1.avi";
-    QString target = "C:\\movie\\temp1.avi";
+    QString target = "C:\\movie\\temp2.avi";
 #else
     qDebug() << srcmplayer->getFilePath().toLocal8Bit().data();
     QString src = srcmplayer->getFilePath();
     qDebug() << targetmplayer->getFilePath().toLocal8Bit().data();
     QString target = targetmplayer->getFilePath();
 #endif
-
-    bool isSame = true;
-#ifdef __PANYUFENG__
-    Get_Frame srcVideo( src.toLocal8Bit().data() );
-    if ( !srcVideo.cap ) {
-        qDebug() << "capture failed";
-        return ;
-    }
-    qDebug() << "srcVideo.num_frame is: " << srcVideo.num_frame;
-    key_frame srcKeyFrame( srcVideo, "" );
-    Get_Frame targetVideo( target.toLocal8Bit().data() );
-    if ( !targetVideo.cap ) {
-        qDebug() << "capture failed";
-        return ;
-    }
-    qDebug() << "targetVideo.num_frame is: " << targetVideo.num_frame;
-    key_frame targetKeyFrame( targetVideo, "" );
-    isSame = cp_video( srcKeyFrame, targetKeyFrame );
-#else
-    copydetection histCmpVideos;
-    double similarity = 0;
-//    IplImage *img1 = cvLoadImage("C:\\Users\\changer_z_xy\\Desktop\\tmp\\1.jpg");
-//    IplImage *img2 = cvLoadImage("C:\\Users\\changer_z_xy\\Desktop\\tmp\\2.jpg");
-//    similarity = histCmpVideos.getsimilar(img1,img2);
-    similarity = histCmpVideos.getsimilar( srcmplayer->getFilePath().toLocal8Bit().data(),
-                                           targetmplayer->getFilePath().toLocal8Bit().data() );
-    qDebug() << "similarity is: " << similarity;
-    isSame = similarity < 0.8;
-#endif
-
-    if ( isSame ) {
-        QMessageBox::information( this, "answer", "these two videos are same!" );
-    } else {
-        QMessageBox::information( this, "answer", "these two videos are not same!" );
+    if ( !cmpThread->isRunning() ) {
+        cmpThread->setSrc( src );
+        cmpThread->setTarget( target );
+        cmpThread->start();
     }
 }
 
 void CustomContentWidget::setSrcFile()
 {
     MPlayerWidget *srcVideo = findChild<MPlayerWidget *>("srcmplayer");
-    srcVideo->setFilePath( QFileDialog::getOpenFileName( this, "open source video", ".", tr("Avi files( *.avi )") ) );
+    srcVideo->setFilePath( QFileDialog::getOpenFileName( this, "打开源视频", ".", tr("Avi 视频( *.avi )") ) );
     srcVideo->load();
 }
 
 void CustomContentWidget::setTargetFile()
 {
     MPlayerWidget *targetVideo = findChild<MPlayerWidget *>("targetmplayer");
-    targetVideo->setFilePath( QFileDialog::getOpenFileName( this, "open target video", ".", tr("Avi files( *.avi )") ) );
+    targetVideo->setFilePath( QFileDialog::getOpenFileName( this, "打开目标视频", ".", tr("Avi 视频( *.avi )") ) );
     targetVideo->load();
+}
+
+//void CustomContentWidget::showAns(bool ans)
+//{
+//    if ( ans ) {
+//        QMessageBox::information(this,"结果","两个视频是同源的！");
+//    } else {
+//        QMessageBox::information(this,"结果","两个视频不是同源的！");
+//    }
+//}
+
+void CustomContentWidget::showOutputWidget()
+{
+    outputText->show();
 }

@@ -1,6 +1,4 @@
 #include "customwidget.h"
-#include <QBitmap>
-#include <QPainter>
 
 CustomWidget::CustomWidget(QWidget *parent)
     : QFrame(parent)
@@ -9,36 +7,6 @@ CustomWidget::CustomWidget(QWidget *parent)
     setWindowFlags( Qt::FramelessWindowHint );
     // set mouse tracking
     setMouseTracking( true );
-    // set myResizeFlag with 0
-    myResizeFlag = 0;
-
-    setMinimumWidth( 850 );
-    setMinimumHeight( 600 );
-
-    QVBoxLayout *mainLayout = new QVBoxLayout( this );
-    // add myTitleBar
-    myTitleBar = new CustomTitleBar( this );
-    mainLayout->addWidget( myTitleBar );
-    // add myToolBar
-    myToolBar = new CustomToolBar( this );
-    mainLayout->addWidget( myToolBar );
-    // add myContentWidget
-    myContentWidget = new CustomContentWidget( this );
-    mainLayout->addWidget( myContentWidget );
-    // add myStatusBar
-    myStatusBar = new CustomStatusBar( this );
-    mainLayout->addWidget( myStatusBar );
-    // set mainLayout without spacing and margin
-    mainLayout->setSpacing( 0 );
-    mainLayout->setContentsMargins(0,0,0,0);
-
-    connect( myToolBar, SIGNAL(showPageAt(int)),
-             myContentWidget, SLOT(showPageAt(int)) );
-}
-
-CustomWidget::~CustomWidget()
-{
-    
 }
 
 void CustomWidget::paintEvent(QPaintEvent *)
@@ -81,10 +49,4 @@ void CustomWidget::mouseMoveEvent(QMouseEvent *event)
     if ( !isMaximized() && ( event->buttons() & Qt::LeftButton ) ) {
         move( event->globalPos() - cursor );
     }
-}
-
-void CustomWidget::resizeEvent( QResizeEvent *event )
-{
-    myContentWidget->resize( width() * myContentWidget->getCntPages(), height() - STATUSBAR_HEIGHT - TITLEBAR_HEIGHT - TOOLBAR_HEIGHT );
-    QWidget::resizeEvent( event );
 }

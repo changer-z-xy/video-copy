@@ -13,6 +13,10 @@
 #include "customwebpage.h"
 #include "abc.h"
 #include "copydetection.h"
+#include "cmpthread.h"
+#include "cmpoutputwidget.h"
+
+class CustomWidget;
 
 class CustomContentWidget : public QWidget
 {
@@ -20,6 +24,10 @@ class CustomContentWidget : public QWidget
 private:
     QVector<ContentPage *> myPages;
     int curPageIndex;
+    int subPageWidth;
+    int subPageHeight;
+    CmpThread *cmpThread;
+    CmpOutputWidget *outputText;
 public:
     explicit CustomContentWidget(QWidget *parent = 0);
     ~CustomContentWidget();
@@ -30,6 +38,8 @@ public slots:
     void setSrcFile();
     void setTargetFile();
     void compareVideos();
+//    void showAns(bool);
+    void showOutputWidget();
 protected:
     void paintEvent(QPaintEvent *event);
     void resizeEvent( QResizeEvent *event );

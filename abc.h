@@ -1,8 +1,15 @@
 #ifndef ABC_H
 #define ABC_H
+
+#include <QThread>
+#include <QMutex>
+#include <QWaitCondition>
+
 #include <math.h>
 #include <vector>
 #include <iostream>
+#include <queue>
+#include <string>
 #include <windows.h>
 
 #include <dshow.h>
@@ -36,9 +43,14 @@ int lhsv_h(float h);
 int lhsv_sv(float sv);
 template <class T>
 int Len(T& array);
-float distance(bm_process a,bm_process b);
-float distance_hgram(float a[250],float b[250]);
+//float distance(bm_process a,bm_process b);
+//float distance_hgram(float *a,float *b);
 void shtime(clock_t start,clock_t end);
-bool cp_video(key_frame a,key_frame b);
+//bool cp_video(key_frame a,key_frame b);
 void show_lhsv(int a[10][5][5]);
+
+extern QMutex outputMutex;
+extern QWaitCondition outputNotEmpty;
+extern QQueue<QString> outputQueue;
+
 #endif // ABC_H

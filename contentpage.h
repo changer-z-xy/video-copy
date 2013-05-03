@@ -10,15 +10,17 @@
 #include <cstdio>
 #include <QDebug>
 //#include "histogramwidget.h"
-//#include "histogram.h"
+//#include "histogram(.h"
 #include "opencvvideobox.h"
 
 class ContentPage : public QWidget
 {
     Q_OBJECT
-    
+
 public:
     ContentPage( QWidget *parent = 0 );
+protected:
+    void paintEvent(QPaintEvent *event);
 public slots:
     void moveToLeft( int x );
 };

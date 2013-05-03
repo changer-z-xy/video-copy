@@ -1,16 +1,19 @@
 #include "abc.h"
-#include <QThread>
 
 clock_t start,end;
 clock_t dxx,bmp;
-float distance_hgram(float a[250],float b[250]){
+
+float key_frame::distance_hgram(float *a,float *b)
+{
     float res=0;
     for(int i=0;i<250;i++){
 		a[i]>b[i]?res+=b[i]:res+=a[i];
 	}
     return res;
 }
-float distance(bm_process* a,bm_process* b){
+
+float key_frame::distance(bm_process* a,bm_process* b)
+{
     float res=0;
     res+=0.075*distance_hgram(a->hgram[0],b->hgram[0]);
     res+=0.075*distance_hgram(a->hgram[2],b->hgram[2]);
@@ -22,117 +25,89 @@ float distance(bm_process* a,bm_process* b){
     res+=0.125*distance_hgram(a->hgram[7],b->hgram[7]);
     res+=0.2*distance_hgram(a->hgram[4],b->hgram[4]);
 	
-//    printf( "test res: %f\n", res );
     return res;
 }
-key_frame::key_frame(Get_Frame video,char* sdir){
+
+key_frame::key_frame(Get_Frame video, CmpThread *_parentThread, char* sdir) :
+    parentThread(_parentThread)
+{
     this->dir=sdir;
-   // video.position=0;
     this->flist.reserve(3000);
-    //this->tflist.reserve(500);
     IplImage* pbuf;
     int i=0;
     pbuf=video.pop();
     bm_process* prefra=new bm_process(pbuf,video.height,video.width);
-//	prefra->change_hsv();
     prefra->readallC();
-//    prefra->make_hgram();
-//	delete[] pbuf;
     float preres=0;
     bm_process* frame;
     bool last=false;
     dxx=bmp=0;
- //   cvNamedWindow( "mainWin", CV_WINDOW_AUTOSIZE );
     for(int i=0;i<video.num_frame-5;i+=SFRA){
-        std::cout<<"frame: "<<i<<std::endl;
+        parentThread->outputAdd(QString("frame: %1").arg(i));
         pbuf=video.pop();
         if(!pbuf) break;
         start=clock();
-//		std::cout << "pbuf is: " << pbuf << std::endl;
         frame=new bm_process(pbuf,video.height,video.width);
-//		printf( "frame done\n" );
-    //	delete[] pbuf;
-    //	frame->change_hsv();
         frame->readallC();
-    //    frame->make_hgram();
-    //	video.sF_position(video.position,this->dir);
-    //	show_lhsv(frame->lhsv[4]);
-    //	cout<<endl;
         end=clock();
-//        shtime(start,end);
-//        std::cout<<"prefra: "<< prefra << ", frame: " << frame <<std::endl;
         float res=distance(prefra,frame);
-		printf( "distance is: %f\n", res );
-    //    cvShowImage("mainWin",prefra->cvp);
-    //    char key = cvWaitKey(20);
+        parentThread->outputAdd(QString("distance is: %1\n").arg(res));
         if(res<SCENEB){
-      //      video.sF_position(video.position,this->dir);
-         //   video.sF_position(video.position-Sfra/video.dRate,this->dir);
-            if(!last) this->flist.push_back(prefra);//if last has included this frame then pass it
+            if(!last)
+                this->flist.push_back(prefra);
             this->flist.push_back(frame);
             frame->iskframe=true;
             prefra->iskframe=true;
             last=true;
-           // getchar();
         }
-        else last=false;
-        delete prefra;
-    //	video.position+=5/video.dRate;
+        else {
+            last=false;
+        }
+        if (!prefra->iskframe)
+            delete prefra;
+
         preres=res;
         prefra=frame;
     }
-this->video_length=this->flist.size();
-/*
-for(i=0;i<this->flist.size();i++){
-            float hgram=0;
-            for(int j=0;j<9;j++)
-                for(int k=0;k<250;k++)
-                    hgram+=this->flist[i]->hgram[j][k];
-            cout<<hgram<<endl;
-            getchar();
-        }
-        */
+    this->video_length=this->flist.size();
 }
-bool cp_video(key_frame a,key_frame b){
+
+key_frame::~key_frame()
+{
+    for (int i = 0, sz = flist.size(); i < sz; ++ i) {
+        delete flist[i];
+    }
+}
+
+bool key_frame::cp_video(const key_frame &b)
+{
     int res=0;
     for(int i=0;i<b.flist.size();i++){
         float pot=(float)i/b.flist.size();
-        int st=pot*a.flist.size();
+        int st=pot*this->flist.size();
         float max=-10;
         for(int j=0;j<40;j++){
-            if(st+j<a.flist.size()){
-                float temp=distance(a.flist[st+j],b.flist[i]);
+            float temp = 0;
+            if(st+j<this->flist.size()){
+                temp=distance(this->flist[st+j],b.flist[i]);
                 temp>max?max=temp:max;
-            //	cout<<"st+j: j="<<j<<"  temp="<<temp<<"----apst: "<<a.flist[st+j]->pst<<",bpst: "<<b.flist[i]->pst<<endl;
             }
             if(st-j>0){
-                float temp=distance(a.flist[st-j],b.flist[i]);
+                temp=distance(this->flist[st-j],b.flist[i]);
                 temp>max?max=temp:max;
-            //	cout<<"st-j: j="<<j<<"  temp="<<temp<<"----apst: "<<a.flist[st-j]->pst<<",bpst: "<<b.flist[i]->pst<<endl;
             }
+            std::cout << "temp is: " << temp << std::endl;
         }
-        if(max>=SCENEB) res++;
-        std::cout<<"the "<<i<<"frame of b video's distance is:"<<max<<std::endl;
-        /*
-        if(max<0.5){
-            for(j=0;j<40;j++){
-            if(st+j<a.flist.size()){
-                float temp=distance(a.flist[st+j],b.flist[i]);
-                temp>max?max=temp:max;
-                cout<<"st+j: j="<<j<<"  temp="<<temp<<"----apst: "<<a.flist[st+j]->pst<<",bpst: "<<b.flist[i]->pst<<endl;
-            }
-            if(st-j>0){
-                float temp=distance(a.flist[st-j],b.flist[i]);
-                temp>max?max=temp:max;
-                cout<<"st-j: j="<<j<<"  temp="<<temp<<"----apst: "<<a.flist[st-j]->pst<<",bpst: "<<b.flist[i]->pst<<endl;
-            }
-        }
-        getchar();
-        }
-*/
+        if(max>=SCENEB)
+            res++;
+        parentThread->outputAdd(QString("the %1 %2 %3")
+                                .arg(i)
+                                .arg("frame of b video's distance is:")
+                                .arg(max));
     }
     float rres=(float)res/b.flist.size();
-    std::cout<<"distance of two video: "<<rres<<std::endl;
-    if(rres>KFB) return true;
+    parentThread->outputAdd(QString("distance of two video: %1").arg(rres));
+    if(rres>KFB)
+        return true;
     return false;
 }

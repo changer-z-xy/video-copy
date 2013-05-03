@@ -27,7 +27,7 @@ private:
     CustomToolButton *closeButton;
 
 public:
-    explicit CustomTitleBar(QWidget *parent);
+    explicit CustomTitleBar(QWidget *parent, const QString &title);
     ~CustomTitleBar();
 signals:
     
