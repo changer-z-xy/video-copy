@@ -1,4 +1,4 @@
-#include "abc.h"
+#include "videoCopy.h"
 
 clock_t start,end;
 clock_t dxx,bmp;
@@ -96,7 +96,6 @@ bool key_frame::cp_video(const key_frame &b)
                 temp=distance(this->flist[st-j],b.flist[i]);
                 temp>max?max=temp:max;
             }
-            std::cout << "temp is: " << temp << std::endl;
         }
         if(max>=SCENEB)
             res++;

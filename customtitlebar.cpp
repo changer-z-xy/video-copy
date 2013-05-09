@@ -1,4 +1,4 @@
-#include "customtitlebar.h"
+#include "videoCopy.h"
 
 CustomTitleBar::CustomTitleBar( QWidget *parent, const QString &title ) :
     parent(parent)
@@ -16,17 +16,17 @@ CustomTitleBar::CustomTitleBar( QWidget *parent, const QString &title ) :
     // following three button didn't show :/img/icon.png
     // because it expired after setIcon( *Pix )
     // set min button
-    minButton = new CustomToolButton( ":/img/icon.png", "" );
+    minButton = new CustomToolButton(":/img/icon.png", "", Qt::ToolButtonIconOnly, 2, this);
     QPixmap minPix = style()->standardPixmap( QStyle::SP_TitleBarMinButton );
     minButton->setIcon( minPix );
     minButton->setIconSize( QSize( 50, 30 ) );
     // set max/restore button
-    maxButton = new CustomToolButton( ":/img/icon.png", "" );
+    maxButton = new CustomToolButton( ":/img/icon.png", "", Qt::ToolButtonIconOnly, 2, this);
     QPixmap maxPix = style()->standardPixmap( QStyle::SP_TitleBarMaxButton );
     maxButton->setIconSize( QSize( 50, 30 ) );
     maxButton->setIcon( maxPix );
     // set close button
-    closeButton = new CustomToolButton( ":/img/icon.png", "" );
+    closeButton = new CustomToolButton( ":/img/icon.png", "", Qt::ToolButtonIconOnly, 2, this);
     QPixmap closePix = style()->standardPixmap( QStyle::SP_TitleBarCloseButton );
     closeButton->setIcon( closePix );
     closeButton->setIconSize( QSize( 50, 30 ) );
@@ -45,8 +45,8 @@ CustomTitleBar::CustomTitleBar( QWidget *parent, const QString &title ) :
              parent, SLOT(showMinimized()) );
     connect( maxButton, SIGNAL(clicked()),
              parent, SLOT(showMaxRestore()) );
-    connect( closeButton, SIGNAL(clicked()),
-             parent, SLOT(close()) );
+    connect(closeButton, SIGNAL(clicked()),
+            QCoreApplication::instance(), SLOT(quit()));
 }
 
 CustomTitleBar::~CustomTitleBar()

@@ -28,7 +28,6 @@ SOURCES += main.cpp\
     key_frame.cpp \
     Get_Frame.cpp \
     bm_process.cpp \
-    copydetection.cpp \
     cmpthread.cpp \
     custommainwidget.cpp \
     cmpoutputwidget.cpp
@@ -49,10 +48,10 @@ HEADERS  += \
     get_frame.h \
     bm_process.h \
     abc.h \
-    copydetection.h \
     cmpthread.h \
     custommainwidget.h \
-    cmpoutputwidget.h
+    cmpoutputwidget.h \
+    videoCopy.h
 
 INCLUDEPATH += C:\opencv\install\include \
 				C:\opencv\install\include\opencv \

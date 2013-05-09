@@ -1,4 +1,4 @@
-#include "mplayerwidget.h"
+#include "videoCopy.h"
 
 MPlayerWidget::MPlayerWidget(QWidget *parent) :
     QWidget(parent)
@@ -48,6 +48,7 @@ void MPlayerWidget::load()
         argList << "-nosound";
         argList << file;
         mpProcess->start( MPLAYER_PATH, argList );
+        mpProcess->write( "pause\n" );
     }
 }
 
@@ -69,4 +70,16 @@ void MPlayerWidget::frame_step()
 const QString& MPlayerWidget::getFilePath()
 {
     return file;
+}
+
+void MPlayerWidget::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);
+    QLinearGradient gradient(rect().topLeft(), rect().bottomRight());
+    gradient.setColorAt(0, QColor(0, 0, 0, 1));
+    gradient.setColorAt(1, QColor(0, 0, 0, 1));
+    QBrush brush(Qt::black);
+    painter.setPen(QPen(Qt::NoBrush, 1));
+    painter.setBrush(brush);
+    painter.drawRect(rect());
 }

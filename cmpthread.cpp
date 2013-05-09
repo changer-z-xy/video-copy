@@ -1,4 +1,4 @@
-#include "cmpthread.h"
+#include "videoCopy.h"
 
 #define __PANYUFENG__
 

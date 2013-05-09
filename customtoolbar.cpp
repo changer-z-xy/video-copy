@@ -1,4 +1,4 @@
-#include "customtoolbar.h"
+#include "videoCopy.h"
 
 CustomToolBar::CustomToolBar(QWidget *parent)
     : QWidget( parent )
@@ -11,9 +11,10 @@ CustomToolBar::CustomToolBar(QWidget *parent)
     for ( int i = 0, sz = strList.size(); i < sz; ++ i ) {
         QString strImage = QString(":/img/%1.png").arg( i + 1 );
         listCustomButton.append( new CustomToolButton( strImage,
-                                                   strList.at( i ),
-                                                   Qt::ToolButtonTextUnderIcon,
-                                                   this ) );
+                                                       strList.at( i ),
+                                                       Qt::ToolButtonTextUnderIcon,
+                                                       1,
+                                                       this ) );
         toolBarLayout->addWidget( listCustomButton.at( i ) );
         listCustomButton.at( i )->setIconSize( QSize( 60, 60 ) );
         connect( listCustomButton.at( i ), SIGNAL(bePressed(CustomToolButton*)),

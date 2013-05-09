@@ -1,8 +1,9 @@
-#include "customstatusbar.h"
+#include "videoCopy.h"
 
-CustomStatusBar::CustomStatusBar(QObject *parent)
+CustomStatusBar::CustomStatusBar(QWidget *parent) : QWidget(parent)
 {
     setFixedHeight( STATUSBAR_HEIGHT );
+    setMouseTracking(true);
 }
 
 CustomStatusBar::~CustomStatusBar()

@@ -1,9 +1,11 @@
-#include "cmpoutputwidget.h"
+#include "videoCopy.h"
 
 CmpOutputWidget::CmpOutputWidget(QWidget *parent) :
     CustomWidget(parent)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout( this );
+    mainLayout->setSpacing(0);
+    mainLayout->setMargin(0);
     mainLayout->setAlignment(Qt::AlignHCenter);
     // add myTitleBar
     myTitleBar = new CustomTitleBar(this, "视频比较输出");

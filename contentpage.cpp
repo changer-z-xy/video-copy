@@ -1,9 +1,9 @@
-#include "contentpage.h"
+#include "videoCopy.h"
 
 ContentPage::ContentPage(QWidget *parent)
     : QWidget(parent)
 {
-
+    setMouseTracking(true);
 }
 
 void ContentPage::paintEvent(QPaintEvent *event)

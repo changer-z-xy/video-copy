@@ -10,7 +10,7 @@ class CustomStatusBar : public QWidget
 {
     Q_OBJECT
 public:
-    explicit CustomStatusBar(QObject *parent = 0);
+    explicit CustomStatusBar(QWidget *parent = 0) : QWidget(parent);
     ~CustomStatusBar();
 signals:
     

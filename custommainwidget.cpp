@@ -1,10 +1,11 @@
-#include "custommainwidget.h"
+#include "videoCopy.h"
 
 CustomMainWidget::CustomMainWidget(QWidget *parent) :
     CustomWidget(parent)
 {
     setMinimumWidth( 850 );
     setMinimumHeight( 600 );
+    setMouseTracking(true);
 
     QVBoxLayout *mainLayout = new QVBoxLayout( this );
     // add myTitleBar

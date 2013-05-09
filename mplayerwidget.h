@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QProcess>
+#include <QPainter>
+#include <QDebug>
 
 const QString MPLAYER_PATH = "mplayer/mplayer.exe";
 
@@ -15,6 +17,7 @@ public:
     QProcess *getMPProcess();
     const QString &getFilePath();
     void setFilePath( const QString &filePath );
+    void paintEvent(QPaintEvent *event);
 signals:
 
 public slots:

@@ -1,10 +1,11 @@
-#include "customtoolbutton.h"
+#include "videoCopy.h"
 
 CustomToolButton::CustomToolButton( const QString &strImage,
-                            const QString &strInfo,
-                            Qt::ToolButtonStyle style,
-                            QWidget *parent ) :
-    QToolButton( parent ), strImage( strImage ), strInfo( strInfo )
+                                    const QString &strInfo,
+                                    Qt::ToolButtonStyle style,
+                                    int _pressStyle,
+                                    QWidget *parent ) :
+    QToolButton( parent ), strImage( strImage ), strInfo( strInfo ), pressStyle(_pressStyle)
 {
     isOver = isPressed = false;
     setToolButtonStyle( style );
@@ -20,7 +21,8 @@ CustomToolButton::CustomToolButton( const QString &strImage,
 
 void CustomToolButton::setPressed( bool pressed )
 {
-    isPressed = pressed;
+    if (pressStyle == 1)
+        isPressed = pressed;
     update();
 }
 

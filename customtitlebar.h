@@ -11,6 +11,7 @@
 #include <QToolButton>
 #include <QPixmap>
 #include <QStyle>
+#include <QCoreApplication>
 #include "customtoolbutton.h"
 
 const int TITLEBAR_HEIGHT = 30;

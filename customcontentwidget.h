@@ -28,6 +28,16 @@ private:
     int subPageHeight;
     CmpThread *cmpThread;
     CmpOutputWidget *outputText;
+    MPlayerWidget *srcmplayer;
+    CustomToolButton *loadSrc;
+    CustomToolButton *pauseSrc;
+    CustomToolButton *stopSrc;
+    MPlayerWidget *targetmplayer;
+    CustomToolButton *loadTarget;
+    CustomToolButton *pauseTarget;
+    CustomToolButton *stopTarget;
+    QPushButton *cmpVideos;
+    QPushButton *showOutputButton;
 public:
     explicit CustomContentWidget(QWidget *parent = 0);
     ~CustomContentWidget();

@@ -1,6 +1,6 @@
-#include "customcontentwidget.h"
+#include "videoCopy.h"
 
-#define __changer_debug__
+//#define __changer_debug__
 
 void setNoSpace( QLayout *layout )
 {
@@ -11,6 +11,7 @@ void setNoSpace( QLayout *layout )
 CustomContentWidget::CustomContentWidget(QWidget *parent) :
     QWidget(parent)
 {
+    setMouseTracking(true);
     subPageWidth = parent->width();
     subPageHeight = parent->height();
     resize( subPageWidth * 3, subPageHeight );
@@ -26,21 +27,33 @@ CustomContentWidget::CustomContentWidget(QWidget *parent) :
     ContentPage *myPage0 = new ContentPage( this );
 
     QVBoxLayout *page0Layout = new QVBoxLayout( myPage0 );
-    setNoSpace( page0Layout );
+//    setNoSpace( page0Layout );
     QHBoxLayout *page0TopLayout = new QHBoxLayout;
 //    setNoSpace( page0TopLayout );
 
-    MPlayerWidget *srcmplayer = new MPlayerWidget( myPage0 );
+    srcmplayer = new MPlayerWidget( myPage0 );
     srcmplayer->setObjectName("srcmplayer");
-    QPushButton *loadSrc = new QPushButton( "打开源视频", myPage0 );
+    loadSrc = new CustomToolButton(":/img/open.png",
+                                   "",
+                                   Qt::ToolButtonIconOnly,
+                                   2,
+                                   this);
     loadSrc->resize( loadSrc->sizeHint() );
     connect( loadSrc, SIGNAL(clicked()),
              this, SLOT(setSrcFile()) );
-    QPushButton *pauseSrc = new QPushButton( "暂停源视频", myPage0 );
+    pauseSrc = new CustomToolButton(":/img/play.png",
+                                    "",
+                                    Qt::ToolButtonIconOnly,
+                                    2,
+                                    this);
     pauseSrc->resize( pauseSrc->sizeHint() );
     connect( pauseSrc, SIGNAL(clicked()),
              srcmplayer, SLOT(pause()) );
-    QPushButton *stopSrc = new QPushButton( "停止源视频", myPage0 );
+    stopSrc = new CustomToolButton(":/img/stop.png",
+                                   "",
+                                   Qt::ToolButtonIconOnly,
+                                   2,
+                                   this);
     stopSrc->resize( stopSrc->sizeHint() );
     connect( stopSrc, SIGNAL(clicked()),
              srcmplayer, SLOT(stop()) );
@@ -55,20 +68,32 @@ CustomContentWidget::CustomContentWidget(QWidget *parent) :
     QVBoxLayout *srcVideoLayout = new QVBoxLayout;
     srcVideoLayout->addWidget( srcmplayer );
     srcVideoLayout->addLayout( srcCtrlLayout );
-    setNoSpace( srcVideoLayout );
+//    setNoSpace( srcVideoLayout );
     page0TopLayout->addLayout( srcVideoLayout );
 
-    MPlayerWidget *targetmplayer = new MPlayerWidget( myPage0 );
+    targetmplayer = new MPlayerWidget( myPage0 );
     targetmplayer->setObjectName( "targetmplayer");
-    QPushButton *loadTarget = new QPushButton( "打开目标视频", myPage0 );
+    loadTarget = new CustomToolButton(":/img/open.png",
+                                      "",
+                                      Qt::ToolButtonIconOnly,
+                                      2,
+                                      this);
     loadTarget->resize( loadSrc->sizeHint() );
     connect( loadTarget, SIGNAL(clicked()),
              this, SLOT(setTargetFile()) );
-    QPushButton *pauseTarget = new QPushButton( "暂停目标视频", myPage0 );
+    pauseTarget = new CustomToolButton(":/img/play.png",
+                                       "",
+                                       Qt::ToolButtonIconOnly,
+                                       2,
+                                       this);
     pauseTarget->resize( pauseTarget->sizeHint() );
     connect( pauseTarget, SIGNAL(clicked()),
              targetmplayer, SLOT(pause()) );
-    QPushButton *stopTarget = new QPushButton( "停止目标视频", myPage0 );
+    stopTarget = new CustomToolButton(":/img/stop.png",
+                                      "",
+                                      Qt::ToolButtonIconOnly,
+                                      2,
+                                      this);
     stopTarget->resize( stopTarget->sizeHint() );
     connect( stopTarget, SIGNAL(clicked()),
              targetmplayer, SLOT(stop()) );
@@ -83,17 +108,17 @@ CustomContentWidget::CustomContentWidget(QWidget *parent) :
     QVBoxLayout *targetVideoLayout = new QVBoxLayout;
     targetVideoLayout->addWidget( targetmplayer );
     targetVideoLayout->addLayout( targetCtrlLayout );
-    setNoSpace( targetVideoLayout );
+//    setNoSpace( targetVideoLayout );
     page0TopLayout->addLayout( targetVideoLayout );
 
 
     QHBoxLayout *page0BottomLayout = new QHBoxLayout;
-    QPushButton *cmpVideos = new QPushButton( "比较视频", myPage0 );
+    cmpVideos = new QPushButton( "比较视频", myPage0 );
     cmpVideos->resize( cmpVideos->sizeHint() );
     connect( cmpVideos, SIGNAL(clicked()),
              this, SLOT(compareVideos()) );
     page0BottomLayout->addWidget( cmpVideos );
-    QPushButton *showOutputButton = new QPushButton("打开输出窗口", myPage0);
+    showOutputButton = new QPushButton("打开输出窗口", myPage0);
     showOutputButton->resize(showOutputButton->sizeHint());
     connect(showOutputButton, SIGNAL(clicked()),
             this, SLOT(showOutputWidget()));
@@ -104,6 +129,12 @@ CustomContentWidget::CustomContentWidget(QWidget *parent) :
     page0Layout->addLayout( page0BottomLayout );
 
     myPage0->setLayout( page0Layout );
+    qDebug() << "srcmplayer->width() height() are: "
+             << srcmplayer->width() << ", "
+             << srcmplayer->height();
+    qDebug() << "targetmplayer->width() height() are: "
+             << targetmplayer->width() << ", "
+             << targetmplayer->height();
     // set codes end
 
     // set myPage1
@@ -215,16 +246,14 @@ void CustomContentWidget::compareVideos()
 
 void CustomContentWidget::setSrcFile()
 {
-    MPlayerWidget *srcVideo = findChild<MPlayerWidget *>("srcmplayer");
-    srcVideo->setFilePath( QFileDialog::getOpenFileName( this, "打开源视频", ".", tr("Avi 视频( *.avi )") ) );
-    srcVideo->load();
+    srcmplayer->setFilePath( QFileDialog::getOpenFileName( this, "打开源视频", ".", tr("Avi 视频( *.avi )") ) );
+    srcmplayer->load();
 }
 
 void CustomContentWidget::setTargetFile()
 {
-    MPlayerWidget *targetVideo = findChild<MPlayerWidget *>("targetmplayer");
-    targetVideo->setFilePath( QFileDialog::getOpenFileName( this, "打开目标视频", ".", tr("Avi 视频( *.avi )") ) );
-    targetVideo->load();
+    targetmplayer->setFilePath( QFileDialog::getOpenFileName( this, "打开目标视频", ".", tr("Avi 视频( *.avi )") ) );
+    targetmplayer->load();
 }
 
 //void CustomContentWidget::showAns(bool ans)
