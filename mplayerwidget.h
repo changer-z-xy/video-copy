@@ -1,14 +1,13 @@
 #ifndef MPLAYERWIDGET_H
 #define MPLAYERWIDGET_H
 
-#include <QWidget>
+#include <QFrame>
 #include <QProcess>
 #include <QPainter>
 #include <QDebug>
+#include "customtoolbutton.h"
 
-const QString MPLAYER_PATH = "mplayer/mplayer.exe";
-
-class MPlayerWidget : public QWidget
+class MPlayerWidget : public QFrame
 {
     Q_OBJECT
 public:
@@ -16,8 +15,13 @@ public:
     ~MPlayerWidget();
     QProcess *getMPProcess();
     const QString &getFilePath();
-    void setFilePath( const QString &filePath );
+    void setFilePath(const QString &filePath);
+    void setFilePath();
+protected:
+    void resizeEvent(QResizeEvent *event);
     void paintEvent(QPaintEvent *event);
+    void enterEvent(QEvent *event);
+    void leaveEvent(QEvent *event);
 signals:
 
 public slots:
@@ -28,7 +32,12 @@ public slots:
     void load();
 private:
     QProcess *mpProcess;
+    QWidget *screen;
     QString file;
+    CustomToolButton *loadButton;
+    CustomToolButton *pauseButton;
+    CustomToolButton *stopButton;
+    bool mouseIsOnScreen;
 };
 
 #endif // MPLAYERWIDGET_H

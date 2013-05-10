@@ -1,9 +1,44 @@
 #include "videoCopy.h"
 
+const QString MPLAYER_PATH = "mplayer/mplayer.exe";
+
 MPlayerWidget::MPlayerWidget(QWidget *parent) :
-    QWidget(parent)
+    QFrame(parent)
 {
-    mpProcess = new QProcess( this );
+    setFrameStyle(QFrame::Panel | QFrame::Sunken);
+    setMouseTracking(true);
+
+    mpProcess = new QProcess(this);
+    screen = new QWidget(this);
+    loadButton = new CustomToolButton(":/img/open.png",
+                                      "",
+                                      Qt::ToolButtonIconOnly,
+                                      2,
+                                      this);
+    pauseButton = new CustomToolButton(":/img/play.png",
+                                       "",
+                                       Qt::ToolButtonIconOnly,
+                                       2,
+                                       this);
+    stopButton = new CustomToolButton(":/img/stop.png",
+                                      "",
+                                      Qt::ToolButtonIconOnly,
+                                      2,
+                                      this);
+
+    connect(loadButton, SIGNAL(clicked()),
+            this, SLOT(load()));
+    connect(pauseButton, SIGNAL(clicked()),
+            this, SLOT(pause()));
+    connect(stopButton, SIGNAL(clicked()),
+            this, SLOT(stop()));
+
+    QHBoxLayout *buttonLayout = new QHBoxLayout(this);
+    buttonLayout->addWidget(loadButton);
+    buttonLayout->addWidget(pauseButton);
+    buttonLayout->addWidget(stopButton);
+    buttonLayout->setAlignment(Qt::AlignHCenter);
+
 }
 
 MPlayerWidget::~MPlayerWidget()
@@ -31,20 +66,27 @@ void MPlayerWidget::stop()
         mpProcess->write( "stop\n" );
 }
 
-void MPlayerWidget::setFilePath( const QString &filePath )
+void MPlayerWidget::setFilePath()
+{
+    file = QFileDialog::getOpenFileName(this, "打开视频", ".", tr("Avi 视频( *.avi )"));
+}
+
+void MPlayerWidget::setFilePath(const QString &filePath)
 {
     file = filePath;
 }
 
 void MPlayerWidget::load()
 {
+    if (file.isEmpty())
+        setFilePath();
     if ( mpProcess->state() == QProcess::Running ) {
         QString cmd = "loadfile " + file + "\n";
         mpProcess->write( cmd.toLocal8Bit() );
     } else if ( mpProcess->state() == QProcess::NotRunning ) {
         QStringList argList;
         argList << "-slave" << "-quiet";
-        argList << "-wid" << QString::number( this->winId() );
+        argList << "-wid" << QString::number(screen->winId());
         argList << "-nosound";
         argList << file;
         mpProcess->start( MPLAYER_PATH, argList );
@@ -82,4 +124,29 @@ void MPlayerWidget::paintEvent(QPaintEvent *event)
     painter.setPen(QPen(Qt::NoBrush, 1));
     painter.setBrush(brush);
     painter.drawRect(rect());
+    QFrame::paintEvent(event);
+}
+
+void MPlayerWidget::resizeEvent(QResizeEvent *event)
+{
+    screen->resize(size());
+    QFrame::resizeEvent(event);
+}
+
+void MPlayerWidget::enterEvent(QEvent *event)
+{
+    mouseIsOnScreen = true;
+    loadButton->setVisible(true);
+    pauseButton->setVisible(true);
+    stopButton->setVisible(true);
+    QFrame::enterEvent(event);
+}
+
+void MPlayerWidget::leaveEvent(QEvent *event)
+{
+    mouseIsOnScreen = false;
+    loadButton->setVisible(false);
+    pauseButton->setVisible(false);
+    stopButton->setVisible(false);
+    QFrame::leaveEvent(event);
 }

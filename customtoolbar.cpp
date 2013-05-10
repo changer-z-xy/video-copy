@@ -4,7 +4,6 @@ CustomToolBar::CustomToolBar(QWidget *parent)
     : QWidget( parent )
 {
     QHBoxLayout *toolBarLayout = new QHBoxLayout( this );
-    setFixedHeight( TOOLBAR_HEIGHT );
     setMouseTracking( true );
     QList<QString> strList;
     strList << "视频比较" << "直方图查看" << "上传视频" << "浏览网络" << "帮助";
@@ -21,9 +20,6 @@ CustomToolBar::CustomToolBar(QWidget *parent)
                  this, SLOT(childPressed(CustomToolButton*)) );
     }
     toolBarLayout->addStretch();
-    setContentsMargins( 0, 0, 0, 0 );
-
-    // custom event of button clicked
 }
 
 void CustomToolBar::childPressed( CustomToolButton *child )

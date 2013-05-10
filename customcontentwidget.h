@@ -8,6 +8,8 @@
 #include <QtWebKitWidgets/QWebView>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QStackedWidget>
+#include <QFileDialog>
 #include "contentpage.h"
 #include "mplayerwidget.h"
 #include "customwebpage.h"
@@ -16,26 +18,18 @@
 #include "cmpthread.h"
 #include "cmpoutputwidget.h"
 
-class CustomWidget;
-
 class CustomContentWidget : public QWidget
 {
     Q_OBJECT
 private:
-    QVector<ContentPage *> myPages;
+    QStackedWidget *myPages;
     int curPageIndex;
     int subPageWidth;
     int subPageHeight;
     CmpThread *cmpThread;
     CmpOutputWidget *outputText;
     MPlayerWidget *srcmplayer;
-    CustomToolButton *loadSrc;
-    CustomToolButton *pauseSrc;
-    CustomToolButton *stopSrc;
     MPlayerWidget *targetmplayer;
-    CustomToolButton *loadTarget;
-    CustomToolButton *pauseTarget;
-    CustomToolButton *stopTarget;
     QPushButton *cmpVideos;
     QPushButton *showOutputButton;
 public:
@@ -44,15 +38,13 @@ public:
     int getCntPages();
 public slots:
     void showPageAt( int index );
-    void moveToLeft( int x );
     void setSrcFile();
     void setTargetFile();
     void compareVideos();
-//    void showAns(bool);
     void showOutputWidget();
 protected:
-    void paintEvent(QPaintEvent *event);
     void resizeEvent( QResizeEvent *event );
+    void paintEvent(QPaintEvent *);
 };
 
 #endif // CUSTOMCONTENTWIDGET_H

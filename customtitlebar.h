@@ -14,8 +14,6 @@
 #include <QCoreApplication>
 #include "customtoolbutton.h"
 
-const int TITLEBAR_HEIGHT = 30;
-
 class CustomTitleBar : public QWidget
 {
     Q_OBJECT
@@ -31,7 +29,9 @@ public:
     explicit CustomTitleBar(QWidget *parent, const QString &title);
     ~CustomTitleBar();
 signals:
-    
+    void closeButtonClicked();
+    void minButtonClicked();
+    void maxButtonClicked();
 public slots:
     
 protected:

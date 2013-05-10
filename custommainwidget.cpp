@@ -1,36 +1,45 @@
 #include "videoCopy.h"
 
+const int TITLEBAR_HEIGHT = 30;
+const int TOOLBAR_HEIGHT = 100;
+const int STATUSBAR_HEIGHT = 30;
+const int MinWidth = 850;
+const int MinHeight = 600;
+
 CustomMainWidget::CustomMainWidget(QWidget *parent) :
     CustomWidget(parent)
 {
-    setMinimumWidth( 850 );
-    setMinimumHeight( 600 );
+    setMinimumWidth( MinWidth );
+    setMinimumHeight( MinHeight );
     setMouseTracking(true);
 
-    QVBoxLayout *mainLayout = new QVBoxLayout( this );
-    // add myTitleBar
-    myTitleBar = new CustomTitleBar(this, "基于内容的视频版权注册认证系统");
-    mainLayout->addWidget( myTitleBar );
-    // add myToolBar
-    myToolBar = new CustomToolBar( this );
-    mainLayout->addWidget( myToolBar );
-    // add myContentWidget
-    myContentWidget = new CustomContentWidget( this );
-    mainLayout->addWidget( myContentWidget );
-    // add myStatusBar
-    myStatusBar = new CustomStatusBar( this );
-    mainLayout->addWidget( myStatusBar );
-    // set mainLayout without spacing and margin
-    mainLayout->setSpacing( 0 );
-    mainLayout->setContentsMargins(0,0,0,0);
+    QVBoxLayout *mainWidgetLayout = new QVBoxLayout(this);
+    myTitleBar = new CustomTitleBar(this, "基于视频内容拷贝检测的认证系统");
+    myTitleBar->setFixedHeight(TITLEBAR_HEIGHT);
+    mainWidgetLayout->addWidget(myTitleBar);
+    myToolBar = new CustomToolBar(this);
+    myToolBar->setFixedHeight(TOOLBAR_HEIGHT);
+    mainWidgetLayout->addWidget(myToolBar);
+    myContentWidget = new CustomContentWidget(this);
+    mainWidgetLayout->addWidget(myContentWidget);
+    myStatusBar = new CustomStatusBar(this);
+    myStatusBar->setFixedHeight(STATUSBAR_HEIGHT);
+    myStatusBar->resize(width(), STATUSBAR_HEIGHT);
+    mainWidgetLayout->addWidget(myStatusBar);
+    mainWidgetLayout->setSpacing(0);
+    mainWidgetLayout->setMargin(0);
 
-    connect( myToolBar, SIGNAL(showPageAt(int)),
-             myContentWidget, SLOT(showPageAt(int)) );
+    connect(myToolBar, SIGNAL(showPageAt(int)),
+            myContentWidget, SLOT(showPageAt(int)));
+    connect(myTitleBar, SIGNAL(closeButtonClicked()),
+            QApplication::instance(), SLOT(quit()));
+    connect(myTitleBar, SIGNAL(minButtonClicked()),
+            this, SLOT(showMinimized()));
+    connect(myTitleBar, SIGNAL(maxButtonClicked()),
+            this, SLOT(showMaxRestore()));
 }
 
 void CustomMainWidget::resizeEvent(QResizeEvent *event)
 {
-    myContentWidget->resize( width() * myContentWidget->getCntPages(),
-                             height() - STATUSBAR_HEIGHT - TITLEBAR_HEIGHT - TOOLBAR_HEIGHT );
     QWidget::resizeEvent( event );
 }

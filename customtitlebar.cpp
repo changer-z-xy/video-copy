@@ -3,16 +3,16 @@
 CustomTitleBar::CustomTitleBar( QWidget *parent, const QString &title ) :
     parent(parent)
 {
-    // set fixed height
-    setFixedHeight( TITLEBAR_HEIGHT );
+    QHBoxLayout *titleBarLayout = new QHBoxLayout( this );
     setMouseTracking( true );
     // set icon
     QPixmap icon( ":/img/icon.png" );
     iconLabel = new QLabel( this );
     iconLabel->setPixmap( icon.scaled( TITLEBAR_HEIGHT, TITLEBAR_HEIGHT ) );
-    // set text title
-    parent->setWindowTitle(title);
-    titleLabel = new QLabel( parent->windowTitle() );
+    titleBarLayout->addWidget( iconLabel );
+    titleLabel = new QLabel(title);
+    titleBarLayout->addWidget( titleLabel );
+    titleBarLayout->addStretch();
     // following three button didn't show :/img/icon.png
     // because it expired after setIcon( *Pix )
     // set min button
@@ -20,33 +20,28 @@ CustomTitleBar::CustomTitleBar( QWidget *parent, const QString &title ) :
     QPixmap minPix = style()->standardPixmap( QStyle::SP_TitleBarMinButton );
     minButton->setIcon( minPix );
     minButton->setIconSize( QSize( 50, 30 ) );
+    titleBarLayout->addWidget( minButton );
     // set max/restore button
     maxButton = new CustomToolButton( ":/img/icon.png", "", Qt::ToolButtonIconOnly, 2, this);
     QPixmap maxPix = style()->standardPixmap( QStyle::SP_TitleBarMaxButton );
     maxButton->setIconSize( QSize( 50, 30 ) );
     maxButton->setIcon( maxPix );
+    titleBarLayout->addWidget( maxButton );
     // set close button
     closeButton = new CustomToolButton( ":/img/icon.png", "", Qt::ToolButtonIconOnly, 2, this);
     QPixmap closePix = style()->standardPixmap( QStyle::SP_TitleBarCloseButton );
     closeButton->setIcon( closePix );
     closeButton->setIconSize( QSize( 50, 30 ) );
-
-    QHBoxLayout *titleBarLayout = new QHBoxLayout( this );
-    titleBarLayout->addWidget( iconLabel );
-    titleBarLayout->addWidget( titleLabel );
-    titleBarLayout->addStretch();
-    titleBarLayout->addWidget( minButton );
-    titleBarLayout->addWidget( maxButton );
     titleBarLayout->addWidget( closeButton );
-    titleBarLayout->setSpacing( 0 );
-    titleBarLayout->setContentsMargins(0,0,0,0);
+    titleBarLayout->setSpacing(0);
+    titleBarLayout->setMargin(0);
 
-    connect( minButton, SIGNAL(clicked()),
-             parent, SLOT(showMinimized()) );
-    connect( maxButton, SIGNAL(clicked()),
-             parent, SLOT(showMaxRestore()) );
+    connect(minButton, SIGNAL(clicked()),
+            this, SIGNAL(minButtonClicked()));
+    connect(maxButton, SIGNAL(clicked()),
+            this, SIGNAL(maxButtonClicked()));
     connect(closeButton, SIGNAL(clicked()),
-            QCoreApplication::instance(), SLOT(quit()));
+            this, SIGNAL(closeButtonClicked()));
 }
 
 CustomTitleBar::~CustomTitleBar()

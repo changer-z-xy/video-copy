@@ -10,22 +10,24 @@
 #include <QPainter>
 #include <QMouseEvent>
 
-const int MinWidth = 850;
-const int MinHeight = 600;
-
 class CustomWidget : public QFrame
 {
     Q_OBJECT
 private:
     QPoint preCursorPos;
     QPoint preWidgetPos;
+    int dir;
 public:
     CustomWidget(QWidget *parent = 0);
+    void setCursorStyle(int _dir);
+    void borderResize(int dx, int dy);
+    void borderResize(const QPoint &curPos);
+    int calcDir(int x, int y);
 protected:
     void paintEvent(QPaintEvent *);
     void mouseMoveEvent( QMouseEvent *event );
     void mousePressEvent( QMouseEvent *event );
-
+    void mouseReleaseEvent(QMouseEvent *event);
 public slots:
     void showMaxRestore();
 };

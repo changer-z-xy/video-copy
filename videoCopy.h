@@ -23,5 +23,9 @@
 
 extern const int MinWidth;
 extern const int MinHeight;
+extern const int TITLEBAR_HEIGHT;
+extern const int TOOLBAR_HEIGHT;
+extern const int STATUSBAR_HEIGHT;
+extern const QString MPLAYER_PATH;
 
 #endif // VIDEOCOPY_H

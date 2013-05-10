@@ -2,7 +2,6 @@
 
 CustomStatusBar::CustomStatusBar(QWidget *parent) : QWidget(parent)
 {
-    setFixedHeight( STATUSBAR_HEIGHT );
     setMouseTracking(true);
 }
 
