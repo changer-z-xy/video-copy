@@ -12,7 +12,10 @@
 #include <QPixmap>
 #include <QStyle>
 #include <QCoreApplication>
+
 #include "customtoolbutton.h"
+
+extern const int TITLEBAR_HEIGHT;
 
 class CustomTitleBar : public QWidget
 {

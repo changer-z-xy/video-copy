@@ -1,4 +1,4 @@
-#include "videoCopy.h"
+#include "mplayerwidget.h"
 
 const QString MPLAYER_PATH = "mplayer/mplayer.exe";
 
@@ -8,6 +8,7 @@ MPlayerWidget::MPlayerWidget(QWidget *parent) :
     setFrameStyle(QFrame::Panel | QFrame::Sunken);
     setMouseTracking(true);
 
+    state = 0;
     mpProcess = new QProcess(this);
     screen = new QWidget(this);
     loadButton = new CustomToolButton(":/img/open.png",
@@ -78,11 +79,11 @@ void MPlayerWidget::setFilePath(const QString &filePath)
 
 void MPlayerWidget::load()
 {
-    if (file.isEmpty())
-        setFilePath();
+    setFilePath();
     if ( mpProcess->state() == QProcess::Running ) {
         QString cmd = "loadfile " + file + "\n";
         mpProcess->write( cmd.toLocal8Bit() );
+        mpProcess->write("pause\n");
     } else if ( mpProcess->state() == QProcess::NotRunning ) {
         QStringList argList;
         argList << "-slave" << "-quiet";
@@ -91,6 +92,7 @@ void MPlayerWidget::load()
         argList << file;
         mpProcess->start( MPLAYER_PATH, argList );
         mpProcess->write( "pause\n" );
+        state = 1;
     }
 }
 

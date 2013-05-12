@@ -1,4 +1,6 @@
-#include "videoCopy.h"
+#include "customstatusbar.h"
+
+const int STATUSBAR_HEIGHT = 30;
 
 CustomStatusBar::CustomStatusBar(QWidget *parent) : QWidget(parent)
 {

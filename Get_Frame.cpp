@@ -1,4 +1,4 @@
-#include "videoCopy.h"
+#include "abc.h"
 
 Get_Frame::Get_Frame(char* fn)
 {

@@ -1,6 +1,6 @@
-#include "videoCopy.h"
+#include "customcontentwidget.h"
 
-//#define __changer_debug__
+const int CmpPoolSize = 4;
 
 void setNoSpace( QLayout *layout )
 {
@@ -12,62 +12,69 @@ CustomContentWidget::CustomContentWidget(QWidget *parent) :
     QWidget(parent)
 {
     setMouseTracking(true);
-    cmpThread = new CmpThread(this);
-    outputText = new CmpOutputWidget(0);
-    outputText->hide();
-    connect(cmpThread, SIGNAL(outputNewItem()),
-            outputText, SLOT(addOutput()));
+
+/* create a new CmpPoolManager, then move it to
+ * a new thread and start this pool manager thread
+ */
+    pm = new CmpPoolManager(CmpPoolSize);
+    pmThread = new QThread();
+    pm->moveToThread(pmThread);
+    pmThread->start();
+
+    taskNo = 0;
 
     myPages = new QStackedWidget(this);
     // set myPage0
     {
-    ContentPage *myPage0 = new ContentPage(this);
-    srcmplayer = new MPlayerWidget(this);
-    targetmplayer = new MPlayerWidget(this);
-    cmpVideos = new QPushButton( "比较视频", myPage0 );
-    showOutputButton = new QPushButton("打开输出窗口", myPage0);
+        consignor = new CmpConsignor(pm);
+        ContentPage *myPage0 = new ContentPage(this);
+        srcmplayer = new MPlayerWidget(this);
+        targetmplayer = new MPlayerWidget(this);
+        cmpVideos = new QPushButton( "比较视频", myPage0 );
+        showOutputButton = new QPushButton("打开输出窗口", myPage0);
+        outputWidget = new CmpOutputWidget(consignor);
 
-    connect( cmpVideos, SIGNAL(clicked()),
-             this, SLOT(compareVideos()) );
-    connect(showOutputButton, SIGNAL(clicked()),
-            this, SLOT(showOutputWidget()));
+        connect(cmpVideos, SIGNAL(clicked()),
+                this, SLOT(compareVideos()) );
+        connect(showOutputButton, SIGNAL(clicked()),
+                this, SLOT(showOutputWidget()));
 
-    QVBoxLayout *page0Layout = new QVBoxLayout(myPage0);
-    QHBoxLayout *page0TopLayout = new QHBoxLayout;
-    page0TopLayout->addWidget(srcmplayer);
-    page0TopLayout->addWidget(targetmplayer);
-    page0TopLayout->setMargin(0);
-    QHBoxLayout *page0BottomLayout = new QHBoxLayout;
-    page0BottomLayout->addWidget( cmpVideos );
-    page0BottomLayout->addWidget(showOutputButton);
-    page0BottomLayout->setMargin(0);
-    page0BottomLayout->setAlignment( Qt::AlignHCenter );
-    page0Layout->addLayout( page0TopLayout );
-    page0Layout->addLayout( page0BottomLayout );
-    page0Layout->setMargin(0);
+        QVBoxLayout *page0Layout = new QVBoxLayout(myPage0);
+        QHBoxLayout *page0TopLayout = new QHBoxLayout;
+        page0TopLayout->addWidget(srcmplayer);
+        page0TopLayout->addWidget(targetmplayer);
+        page0TopLayout->setMargin(0);
+        QHBoxLayout *page0BottomLayout = new QHBoxLayout;
+        page0BottomLayout->addWidget( cmpVideos );
+        page0BottomLayout->addWidget(showOutputButton);
+        page0BottomLayout->setMargin(0);
+        page0BottomLayout->setAlignment( Qt::AlignHCenter );
+        page0Layout->addLayout( page0TopLayout );
+        page0Layout->addLayout( page0BottomLayout );
+        page0Layout->setMargin(0);
 
-    myPages->addWidget(myPage0);
+        myPages->addWidget(myPage0);
     }
 
     // set myPage1
     {
-    ContentPage *myPage1 = new ContentPage( this );
-    myPages->addWidget(myPage1);
+        ContentPage *myPage1 = new ContentPage( this );
+        myPages->addWidget(myPage1);
     }
 
     // set myPage2
     {
-    ContentPage *myPage2 = new ContentPage( this );
+        ContentPage *myPage2 = new ContentPage( this );
 
-    QWebView *myWebPage = new QWebView( myPage2 );
-    myPages->addWidget(myPage2);
+        QWebView *myWebPage = new QWebView( myPage2 );
+        myPages->addWidget(myPage2);
     }
 
 }
 
 CustomContentWidget::~CustomContentWidget()
 {
-    delete outputText;
+    delete outputWidget;
 }
 
 void CustomContentWidget::showPageAt(int index)
@@ -92,11 +99,8 @@ void CustomContentWidget::compareVideos()
     qDebug() << targetmplayer->getFilePath().toLocal8Bit().data();
     QString target = targetmplayer->getFilePath();
 #endif
-    if (!cmpThread->isRunning()) {
-        cmpThread->setSrc( src );
-        cmpThread->setTarget( target );
-        cmpThread->start();
-    }
+    qDebug() << "CustomContentWidget::compareVideos";
+    consignor->addTask(src, target, true, taskNo++);
 }
 
 void CustomContentWidget::setSrcFile()
@@ -113,9 +117,10 @@ void CustomContentWidget::setTargetFile()
 
 void CustomContentWidget::showOutputWidget()
 {
-    outputText->show();
+    outputWidget->show();
 }
 
-void CustomContentWidget::paintEvent(QPaintEvent *)
+void CustomContentWidget::paintEvent(QPaintEvent *event)
 {
+    QWidget::paintEvent(event);
 }

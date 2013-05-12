@@ -1,4 +1,4 @@
-#include "videoCopy.h"
+#include "abc.h"
 
 
 void show_lhsv(int a[10][5][5]){
@@ -19,9 +19,6 @@ void init_lhsv(int a[10][5][5]){
 }
 
 bm_process::~bm_process(){
-    //
-    //	delete[] this->hsv;
-    //
 }
 
 bm_process::bm_process(char* pbuf,float pst){
@@ -33,9 +30,6 @@ bm_process::bm_process(char* pbuf,float pst){
     this->iskframe=false;
     this->pst=pst;
     this->pbuf=pbuf+sizeof(BITMAPINFOHEADER);
-
-   // int lineByte=(this->width*this->bitcount/8+3)/4*4;//align to 4 times
-
 }
 
 bm_process::bm_process(char* pbuf){
@@ -84,14 +78,6 @@ void bm_process::readall(){
     for(i;i<this->height*11/11*this->width*3;i+=lineByte){
         this->readline(i,this->lhsv[6],this->lhsv[7],this->lhsv[8]);
     }
-    /*
-    for(i=0;i<9;i++)
-    {
-        show_lhsv(this->lhsv[i]);
-        cout<<endl;
-        getchar();
-    }
-    */
 }
 void bm_process::readallC(){
     //此函数负责将一张IplImage提取出9个直方图
@@ -100,10 +86,8 @@ void bm_process::readallC(){
     int i=0;
     int count=0;
     int lineByte=this->cvp->widthStep;
-// changer_z_xy changed it
-// changes begin
+
     for(i=0;i<9;i++) memset(this->hgram[i],0,sizeof(this->hgram[i]));
-// changes end
     for(i;i<this->height*3/11*this->width*3;i+=lineByte){
         this->readlineR(i,this->hgram[0],this->hgram[1],this->hgram[2]);
     }
@@ -122,14 +106,6 @@ void bm_process::readallC(){
     for(int j=0;j<250;j++) this->hgram[6][j]/=this->block_size[6];
     for(int j=0;j<250;j++) this->hgram[7][j]/=this->block_size[7];
     for(int j=0;j<250;j++) this->hgram[8][j]/=this->block_size[8];
-    /*
-    for(i=0;i<9;i++)
-    {
-        show_lhsv(this->lhsv[i]);
-        cout<<endl;
-        getchar();
-    }
-    */
 }
 
 void bm_process::readline(int h,int a[10][5][5],int b[10][5][5],int c[10][5][5]){
@@ -175,7 +151,6 @@ void bm_process::readlineR(int h,float a[250],float b[250],float c[250]){
             *(this->pbuf+i+1)/255.0,
             *(this->pbuf+i)/255.0,
             h,s,v);
-    //	cout<<"h:"<<h<<"  s:"<<s<<"  v:"<<v<<endl;
         int temp=25*lhsv_h(h)+5*lhsv_sv(s)+lhsv_sv(v);
         a[temp]++;
     }
@@ -207,66 +182,10 @@ void bm_process::readlineR(int h,float a[250],float b[250],float c[250]){
 
 void bm_process::make_hgram()//make all 9 histogram
 {
-
-
     for(int i=0;i<9;i++){
         ahsv ahl[250];
-    //	cout<<"make_ahsvl"<<endl;
         this->make_ahsvl(ahl,this->lhsv[i]);
-    //	cout<<"sort_ahsvl"<<endl;
         this->sort_ahsvl(ahl,250);
-/*
-        for(int l=0;l<250;l++) cout<<ahl[l].count<<" ";
-        cout<<endl;
-        getchar();
-*/
-        int j=0;
-        //if judge little ahsv left
-        /*
-        cout<<"jahsv"<<endl;
-        for(j;j<250;j++){
-            if(!this->jahsv(ahl[j],i)) ahl[j].count=0;
-        }
-        cout<<"sort_ahsvl again"<<endl;
-        this->sort_ahsvl(ahl,250);
-        */
-        ///
-
-/*
-        for(int l=0;l<250;l++) cout<<ahl[l].count<<" ";
-        cout<<endl;
-        getchar();
-*/
-
-        //expand to three point of color
-        /*
-        for(j=0;j<100;j++){
-            int h=ahl[j].h-1;
-            int s=ahl[j].s-1;
-            int v=ahl[j].v-1;
-            for(h;h<ahl[j].h+2;h++){
-                if(h<0||h>9) continue;
-                for(s;s<ahl[j].s+2;s++){
-                    if(s<0||s>4) continue;
-                    for(v;v<ahl[j].v+2;v++){
-                        if(v<0||v>4) continue;
-                        ahl[j].count+=this->lhsv[i][h][s][v];
-                    }
-                }
-            }
-        }
-
-        */
-
-/*
-        for(int l=0;l<250;l++) cout<<ahl[l].count<<" ";
-        cout<<endl;
-        getchar();
-*/
-
-    //	cout<<"sort_ahsvl 100"<<endl;
-//		this->sort_ahsvl(ahl,100);
-    //	cout<<"ahsvl_hgram"<<"  sizeof(hgram[i] )"<<sizeof(this->hgram[i])<<endl;
         memset(this->hgram[i],0,sizeof(this->hgram[i]));
         this->ahsvl_hgram(ahl,this->hgram[i],this->block_size[i]);
     }

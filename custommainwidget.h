@@ -6,6 +6,10 @@
 #include "customtoolbar.h"
 #include "customcontentwidget.h"
 #include "customstatusbar.h"
+#include "cmppoolmanager.h"
+
+extern const int MinWidth;
+extern const int MinHeight;
 
 class CustomMainWidget : public CustomWidget
 {

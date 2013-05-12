@@ -1,12 +1,15 @@
 #ifndef CMPOUTPUTWIDGET_H
 #define CMPOUTPUTWIDGET_H
 
-#include "customwidget.h"
-#include "customtitlebar.h"
-#include "abc.h"
 #include <QTextEdit>
 #include <QPushButton>
 #include <QQueue>
+
+#include "abc.h"
+
+#include "customwidget.h"
+#include "customtitlebar.h"
+#include "cmpconsignor.h"
 
 class CmpOutputWidget : public CustomWidget
 {
@@ -15,11 +18,13 @@ private:
     CustomTitleBar *myTitleBar;
     QTextEdit *outputTextArea;
     QPushButton *hideButton;
+    QPushButton *clearButton;
+    CmpConsignor *consignor;
 public:
-    CmpOutputWidget(QWidget *parent = 0);
+    CmpOutputWidget(CmpConsignor *_consignor, QWidget *parent = 0);
 public slots:
     void addOutput();
-    void clear();
+    void clearOutput();
 };
 
 #endif // CMPOUTPUTWIDGET_H

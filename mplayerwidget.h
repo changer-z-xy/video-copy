@@ -5,7 +5,12 @@
 #include <QProcess>
 #include <QPainter>
 #include <QDebug>
+#include <QHBoxLayout>
+#include <QFileDialog>
+
 #include "customtoolbutton.h"
+
+extern const QString MPLAYER_PATH;
 
 class MPlayerWidget : public QFrame
 {
@@ -38,6 +43,7 @@ private:
     CustomToolButton *pauseButton;
     CustomToolButton *stopButton;
     bool mouseIsOnScreen;
+    int state;
 };
 
 #endif // MPLAYERWIDGET_H

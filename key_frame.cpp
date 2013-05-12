@@ -1,4 +1,4 @@
-#include "videoCopy.h"
+#include "abc.h"
 
 clock_t start,end;
 clock_t dxx,bmp;
@@ -28,8 +28,8 @@ float key_frame::distance(bm_process* a,bm_process* b)
     return res;
 }
 
-key_frame::key_frame(Get_Frame video, CmpThread *_parentThread, char* sdir) :
-    parentThread(_parentThread)
+key_frame::key_frame(Get_Frame video, CmpWorker *_worker, char* sdir) :
+    worker(_worker)
 {
     this->dir=sdir;
     this->flist.reserve(3000);
@@ -43,7 +43,7 @@ key_frame::key_frame(Get_Frame video, CmpThread *_parentThread, char* sdir) :
     bool last=false;
     dxx=bmp=0;
     for(int i=0;i<video.num_frame-5;i+=SFRA){
-        parentThread->outputAdd(QString("frame: %1").arg(i));
+        worker->output(QString("frame: %1").arg(i));
         pbuf=video.pop();
         if(!pbuf) break;
         start=clock();
@@ -51,7 +51,7 @@ key_frame::key_frame(Get_Frame video, CmpThread *_parentThread, char* sdir) :
         frame->readallC();
         end=clock();
         float res=distance(prefra,frame);
-        parentThread->outputAdd(QString("distance is: %1\n").arg(res));
+        worker->output(QString("distance is: %1\n").arg(res));
         if(res<SCENEB){
             if(!last)
                 this->flist.push_back(prefra);
@@ -99,13 +99,13 @@ bool key_frame::cp_video(const key_frame &b)
         }
         if(max>=SCENEB)
             res++;
-        parentThread->outputAdd(QString("the %1 %2 %3")
+        worker->output(QString("the %1 %2 %3")
                                 .arg(i)
                                 .arg("frame of b video's distance is:")
                                 .arg(max));
     }
     float rres=(float)res/b.flist.size();
-    parentThread->outputAdd(QString("distance of two video: %1").arg(rres));
+    worker->output(QString("distance of two video: %1").arg(rres));
     if(rres>KFB)
         return true;
     return false;

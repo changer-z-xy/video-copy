@@ -1,4 +1,6 @@
-#include "videoCopy.h"
+#include "customtoolbar.h"
+
+const int TOOLBAR_HEIGHT = 100;
 
 CustomToolBar::CustomToolBar(QWidget *parent)
     : QWidget( parent )

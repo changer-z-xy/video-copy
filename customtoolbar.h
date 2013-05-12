@@ -6,6 +6,8 @@
 #include <QPainter>
 #include "customtoolbutton.h"
 
+extern const int TOOLBAR_HEIGHT;
+
 class CustomToolBar : public QWidget
 {
     Q_OBJECT

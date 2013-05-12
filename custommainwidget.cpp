@@ -1,8 +1,5 @@
-#include "videoCopy.h"
+#include "custommainwidget.h"
 
-const int TITLEBAR_HEIGHT = 30;
-const int TOOLBAR_HEIGHT = 100;
-const int STATUSBAR_HEIGHT = 30;
 const int MinWidth = 850;
 const int MinHeight = 600;
 
@@ -12,6 +9,8 @@ CustomMainWidget::CustomMainWidget(QWidget *parent) :
     setMinimumWidth( MinWidth );
     setMinimumHeight( MinHeight );
     setMouseTracking(true);
+
+
 
     QVBoxLayout *mainWidgetLayout = new QVBoxLayout(this);
     myTitleBar = new CustomTitleBar(this, "基于视频内容拷贝检测的认证系统");

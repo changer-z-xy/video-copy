@@ -9,7 +9,9 @@
 #include "key_frame.h"
 
 #include "cmpoutputwidget.h"
-#include "cmpthread.h"
+#include "cmpevent.h"
+#include "cmpconsignor.h"
+#include "cmppoolmanager.h"
 #include "contentpage.h"
 #include "customcontentwidget.h"
 #include "custommainwidget.h"
@@ -27,5 +29,8 @@ extern const int TITLEBAR_HEIGHT;
 extern const int TOOLBAR_HEIGHT;
 extern const int STATUSBAR_HEIGHT;
 extern const QString MPLAYER_PATH;
+extern const QEvent::Type CmpTaskEventType;//QEvent::User
+extern const QEvent::Type CmpOutputEventType;//QEvent::User + 1
+extern const int CmpPoolSize;
 
 #endif // VIDEOCOPY_H

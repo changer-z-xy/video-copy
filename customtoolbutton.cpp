@@ -1,4 +1,4 @@
-#include "videoCopy.h"
+#include "customtoolbutton.h"
 
 CustomToolButton::CustomToolButton( const QString &strImage,
                                     const QString &strInfo,

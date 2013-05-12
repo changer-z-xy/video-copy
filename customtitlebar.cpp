@@ -1,4 +1,6 @@
-#include "videoCopy.h"
+#include "customtitlebar.h"
+
+const int TITLEBAR_HEIGHT = 30;
 
 CustomTitleBar::CustomTitleBar( QWidget *parent, const QString &title ) :
     parent(parent)
