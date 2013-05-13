@@ -2,13 +2,14 @@
 
 const QString MPLAYER_PATH = "mplayer/mplayer.exe";
 
-MPlayerWidget::MPlayerWidget(QWidget *parent) :
-    QFrame(parent)
+MPlayerWidget::MPlayerWidget(QWidget *_parent) :
+    QFrame(_parent)
 {
     setFrameStyle(QFrame::Panel | QFrame::Sunken);
     setMouseTracking(true);
 
     state = 0;
+    parent = _parent;
     mpProcess = new QProcess(this);
     screen = new QWidget(this);
     loadButton = new CustomToolButton(":/img/open.png",
@@ -69,7 +70,7 @@ void MPlayerWidget::stop()
 
 void MPlayerWidget::setFilePath()
 {
-    file = QFileDialog::getOpenFileName(this, "打开视频", ".", tr("Avi 视频( *.avi )"));
+    file = QFileDialog::getOpenFileName(parent, "打开视频", ".", tr("Avi 视频( *.avi )"));
 }
 
 void MPlayerWidget::setFilePath(const QString &filePath)

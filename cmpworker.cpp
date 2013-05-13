@@ -13,7 +13,6 @@ CmpWorker::CmpWorker(CmpPoolManager *_pm, QObject *parent)
 bool CmpWorker::cmpTwoFiles(const QString &fa, const QString &fb)
 {
     bool ans = false;
-    qDebug() << "cmpTwoFiles";
 #ifdef __COLOR_HISTOGRAM__
     Get_Frame srcVideo( fa.toLocal8Bit().data() );
     if ( !srcVideo.cap ) {
@@ -42,6 +41,7 @@ void CmpWorker::output(const QString &text)
         return;
     CmpOutputEvent *oe = new CmpOutputEvent();
     oe->setContent(text);
+    oe->setTaskNo(taskNo);
     QApplication::postEvent((QObject*)consignor, oe);
 }
 
@@ -62,9 +62,7 @@ int CmpWorker::getTaskState()
 
 bool CmpWorker::event(QEvent *e)
 {
-    qDebug() << "CmpWorker::event";
     if (e->type() == CmpTaskEventType) {
-        qDebug() << "e->type() == CmpTaskEventType";
         CmpTaskEvent *tmp = static_cast<CmpTaskEvent *>(e);
         processTaskEvent(tmp);
         return true;
@@ -75,11 +73,9 @@ bool CmpWorker::event(QEvent *e)
 void CmpWorker::processTaskEvent(CmpTaskEvent *event)
 {
     taskState = 1;
-    qDebug() << "CmpWorker::processTaskEvent";
-    if (event->getAns() != -1)
-        qDebug() << "Warning: Completed task was send to CmpWorker!";
     consignor = event->getConsignor();
     enableOutput = event->getEnableOutput();
+    taskNo = event->getTaskNo();
     bool ans = cmpTwoFiles(event->getFa(), event->getFb());
     CmpTaskEvent *tmp = new CmpTaskEvent(*event);
     tmp->setAns(ans);

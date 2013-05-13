@@ -10,6 +10,8 @@
 #include <iostream>
 #include <queue>
 #include <string>
+#include <algorithm>
+
 #include <windows.h>
 
 #include <dshow.h>

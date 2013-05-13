@@ -9,11 +9,11 @@ public:
     int fps;
     int num_frame;
     int nowframe;
-    IplImage* frame;
-    CvCapture* cap;
+    IplImage *frame;
+    CvCapture *cap;
 
-    Get_Frame(char* fn);
-    IplImage* pop();
+    Get_Frame(char *fn);
+    IplImage *pop();
 };
 
 #endif // GET_FRAME_H

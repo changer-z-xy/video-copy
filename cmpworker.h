@@ -30,6 +30,7 @@ private:
      * 1: is busy
      */
     int taskState;
+    int taskNo;
     bool enableOutput;
     CmpPoolManager *pm;
     CmpConsignor *consignor;

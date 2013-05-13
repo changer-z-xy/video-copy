@@ -12,6 +12,7 @@ public:
     CmpOutputEvent();
     const QString &getContent();
     void setContent(const QString& _content);
+    void setTaskNo(int no);
     int getTaskNo();
 private:
     int taskNo;

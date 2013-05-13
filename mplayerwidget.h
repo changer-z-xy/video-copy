@@ -16,7 +16,7 @@ class MPlayerWidget : public QFrame
 {
     Q_OBJECT
 public:
-    explicit MPlayerWidget(QWidget *parent = 0);
+    explicit MPlayerWidget(QWidget *_parent = 0);
     ~MPlayerWidget();
     QProcess *getMPProcess();
     const QString &getFilePath();
@@ -42,6 +42,7 @@ private:
     CustomToolButton *loadButton;
     CustomToolButton *pauseButton;
     CustomToolButton *stopButton;
+    QWidget *parent;
     bool mouseIsOnScreen;
     int state;
 };

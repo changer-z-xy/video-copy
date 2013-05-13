@@ -31,15 +31,16 @@ CmpOutputWidget::CmpOutputWidget(CmpConsignor *_consignor, QWidget *parent)
             this, SLOT(showMinimized()));
     connect(myTitleBar, SIGNAL(maxButtonClicked()),
             this, SLOT(showMaxRestore()));
-    connect(consignor, SIGNAL(oqNotEmpty()),
+    connect(consignor, SIGNAL(oqItemAdded()),
             this, SLOT(addOutput()));
 }
 
 void CmpOutputWidget::addOutput()
 {
-    qDebug() << "CmpOutputWidget::addOutput";
-    QString tmp = consignor->getOq().dequeue();
-    outputTextArea->append(tmp);
+    if (!consignor->getOq().isEmpty()) {
+        QString tmp = consignor->getOq().dequeue();
+        outputTextArea->append(tmp);
+    }
 }
 
 void CmpOutputWidget::clearOutput()

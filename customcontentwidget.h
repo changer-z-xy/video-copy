@@ -16,7 +16,6 @@
 #include "mplayerwidget.h"
 #include "customwebpage.h"
 #include "abc.h"
-#include "copydetection.h"
 #include "cmpoutputwidget.h"
 #include "cmpconsignor.h"
 #include "cmppoolmanager.h"

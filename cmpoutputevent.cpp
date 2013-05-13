@@ -13,6 +13,11 @@ void CmpOutputEvent::setContent(const QString& _content)
     content = _content;
 }
 
+void CmpOutputEvent::setTaskNo(int no)
+{
+    taskNo = no;
+}
+
 const QString& CmpOutputEvent::getContent()
 {
     return content;

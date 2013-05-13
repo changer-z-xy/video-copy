@@ -25,7 +25,7 @@ private:
     QQueue<QString> oq;
 signals:
     void cmpEnd(int taskNo, bool ans);
-    void oqNotEmpty();
+    void oqItemAdded();
 public slots:
     void addTask(const QString &fa,
                  const QString &fb,

@@ -28,8 +28,8 @@ CustomContentWidget::CustomContentWidget(QWidget *parent) :
     {
         consignor = new CmpConsignor(pm);
         ContentPage *myPage0 = new ContentPage(this);
-        srcmplayer = new MPlayerWidget(this);
-        targetmplayer = new MPlayerWidget(this);
+        srcmplayer = new MPlayerWidget(myPage0);
+        targetmplayer = new MPlayerWidget(myPage0);
         cmpVideos = new QPushButton( "比较视频", myPage0 );
         showOutputButton = new QPushButton("打开输出窗口", myPage0);
         outputWidget = new CmpOutputWidget(consignor);
@@ -99,19 +99,18 @@ void CustomContentWidget::compareVideos()
     qDebug() << targetmplayer->getFilePath().toLocal8Bit().data();
     QString target = targetmplayer->getFilePath();
 #endif
-    qDebug() << "CustomContentWidget::compareVideos";
     consignor->addTask(src, target, true, taskNo++);
 }
 
 void CustomContentWidget::setSrcFile()
 {
-    srcmplayer->setFilePath( QFileDialog::getOpenFileName( this, "打开源视频", ".", tr("Avi 视频( *.avi )") ) );
+    srcmplayer->setFilePath(QFileDialog::getOpenFileName( this, "打开源视频", ".", tr("Avi 视频( *.avi )") ));
     srcmplayer->load();
 }
 
 void CustomContentWidget::setTargetFile()
 {
-    targetmplayer->setFilePath( QFileDialog::getOpenFileName( this, "打开目标视频", ".", tr("Avi 视频( *.avi )") ) );
+    targetmplayer->setFilePath(QFileDialog::getOpenFileName( this, "打开目标视频", ".", tr("Avi 视频( *.avi )") ));
     targetmplayer->load();
 }
 
