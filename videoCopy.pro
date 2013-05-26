@@ -32,7 +32,8 @@ SOURCES += main.cpp \
     custommainwidget.cpp \
     customcontentwidget.cpp \
     mplayerwidget.cpp \
-    key_frame.cpp
+    key_frame.cpp \
+    customtreewidget.cpp
 
 HEADERS  += cmpevent.h \
     cmpconsignor.h \
@@ -55,7 +56,8 @@ HEADERS  += cmpevent.h \
     customcontentwidget.h \
     videoCopy.h \
     mplayerwidget.h \
-    key_frame.h
+    key_frame.h \
+    customtreewidget.h
 
 INCLUDEPATH += C:\opencv\install\include \
 				C:\opencv\install\include\opencv \

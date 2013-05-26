@@ -14,4 +14,5 @@ CustomStatusBar::~CustomStatusBar()
 
 void CustomStatusBar::paintEvent( QPaintEvent *event )
 {
+    QWidget::paintEvent(event);
 }

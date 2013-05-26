@@ -1,12 +1,9 @@
 #include "customwebpage.h"
 
 CustomWebPage::CustomWebPage(QWidget *parent) :
-    QWebView(parent)
+    QWidget(parent)
 {
-}
-
-void CustomWebPage::resizeEvent(QResizeEvent *event)
-{
-    setFixedSize( event->size() );
-    QWebView::resizeEvent( event );
+    webview = new QWebView(this);
+    QHBoxLayout *mainLayout = new QHBoxLayout(this);
+    mainLayout->addWidget(webview);
 }

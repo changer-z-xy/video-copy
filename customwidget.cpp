@@ -9,7 +9,7 @@ CustomWidget::CustomWidget(QWidget *parent)
     dir = 0;
 }
 
-void CustomWidget::paintEvent(QPaintEvent *)
+void CustomWidget::paintEvent(QPaintEvent *event)
 {
     QLinearGradient mainWidgetGradient( rect().topLeft(), rect().bottomRight() );
     mainWidgetGradient.setColorAt( 0, QColor( 0, 136, 204, 180 ) );
@@ -17,6 +17,7 @@ void CustomWidget::paintEvent(QPaintEvent *)
     mainWidgetGradient.setColorAt( 1, QColor( 0, 68, 205, 220 ) );
     QPainter painter(this);
     painter.fillRect( rect(), mainWidgetGradient );
+    QFrame::paintEvent(event);
 }
 
 void CustomWidget::showMaxRestore()
@@ -36,6 +37,7 @@ void CustomWidget::mousePressEvent(QMouseEvent *event)
         preWidgetPos = pos();
         dir = calcDir(event->x(), event->y());
     }
+    QFrame::mousePressEvent(event);
 }
 
 void CustomWidget::mouseReleaseEvent(QMouseEvent *event)
@@ -43,6 +45,7 @@ void CustomWidget::mouseReleaseEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton) {
         dir = 0;
     }
+    QFrame::mouseReleaseEvent(event);
 }
 
 void CustomWidget::mouseMoveEvent(QMouseEvent *event)
@@ -59,6 +62,7 @@ void CustomWidget::mouseMoveEvent(QMouseEvent *event)
             }
         }
     }
+    QFrame::mouseMoveEvent(event);
 }
 
 int CustomWidget::calcDir(int x, int y) {

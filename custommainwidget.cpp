@@ -10,8 +10,6 @@ CustomMainWidget::CustomMainWidget(QWidget *parent) :
     setMinimumHeight( MinHeight );
     setMouseTracking(true);
 
-
-
     QVBoxLayout *mainWidgetLayout = new QVBoxLayout(this);
     myTitleBar = new CustomTitleBar(this, "基于视频内容拷贝检测的认证系统");
     myTitleBar->setFixedHeight(TITLEBAR_HEIGHT);
@@ -26,7 +24,7 @@ CustomMainWidget::CustomMainWidget(QWidget *parent) :
     myStatusBar->resize(width(), STATUSBAR_HEIGHT);
     mainWidgetLayout->addWidget(myStatusBar);
     mainWidgetLayout->setSpacing(0);
-    mainWidgetLayout->setMargin(0);
+    mainWidgetLayout->setMargin(5);
 
     connect(myToolBar, SIGNAL(showPageAt(int)),
             myContentWidget, SLOT(showPageAt(int)));

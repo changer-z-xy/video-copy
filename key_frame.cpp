@@ -77,7 +77,7 @@ key_frame::~key_frame()
     }
 }
 
-bool key_frame::cp_video(const key_frame& b)
+bool key_frame::cp_video(const key_frame &b)
 {
     int res = 0;
     for (int i = 0; i < b.flist.size(); i++) {

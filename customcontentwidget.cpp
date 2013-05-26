@@ -65,9 +65,18 @@ CustomContentWidget::CustomContentWidget(QWidget *parent) :
     // set myPage2
     {
         ContentPage *myPage2 = new ContentPage( this );
-
-        QWebView *myWebPage = new QWebView( myPage2 );
+        QWebView *myWebPage = new QWebView(myPage2);
+        myWebPage->load(QUrl(QString("http://www.baidu.com")));
+        QHBoxLayout *myPage2Layout = new QHBoxLayout(myPage2);
+        myPage2Layout->addWidget(myWebPage);
         myPages->addWidget(myPage2);
+    }
+    {
+        ContentPage *myPage3 = new ContentPage(this);
+        QHBoxLayout *myPage3Layout = new QHBoxLayout(myPage3);
+        tw = new CustomTreeWidget(pm, myPage3);
+        myPage3Layout->addWidget(tw);
+        myPages->addWidget(myPage3);
     }
 
 }

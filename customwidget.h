@@ -9,6 +9,7 @@
 #include <QBitmap>
 #include <QPainter>
 #include <QMouseEvent>
+#include <QPaintEvent>
 
 class CustomWidget : public QFrame
 {
@@ -24,7 +25,7 @@ public:
     void borderResize(const QPoint &curPos);
     int calcDir(int x, int y);
 protected:
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *event);
     void mouseMoveEvent( QMouseEvent *event );
     void mousePressEvent( QMouseEvent *event );
     void mouseReleaseEvent(QMouseEvent *event);

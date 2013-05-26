@@ -11,6 +11,7 @@
 #include <QPushButton>
 #include <QStackedWidget>
 #include <QFileDialog>
+#include <QTreeWidget>
 
 #include "contentpage.h"
 #include "mplayerwidget.h"
@@ -19,6 +20,7 @@
 #include "cmpoutputwidget.h"
 #include "cmpconsignor.h"
 #include "cmppoolmanager.h"
+#include "customtreewidget.h"
 
 //#define __changer_debug__
 
@@ -39,6 +41,7 @@ private:
     CmpConsignor *consignor;
     MPlayerWidget *srcmplayer;
     MPlayerWidget *targetmplayer;
+    CustomTreeWidget *tw;
     QPushButton *cmpVideos;
     QPushButton *showOutputButton;
 public:
