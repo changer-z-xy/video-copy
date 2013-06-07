@@ -27,15 +27,16 @@ float key_frame::distance(bm_process *a, bm_process *b)
     return res;
 }
 
-key_frame::key_frame(Get_Frame video, CmpWorker *_worker, char *sdir) :
-    worker(_worker)
+key_frame::key_frame(Get_Frame video, CmpWorker *_worker, const QString &dir) :
+    worker(_worker), dir(dir)
 {
-    this->dir = sdir;
+    this->dir = dir;
     this->flist.reserve(3000);
     IplImage *pbuf;
     int i = 0;
     pbuf = video.pop();
-    bm_process *prefra = new bm_process(pbuf, video.height, video.width);
+    int timepos = (int) cvGetCaptureProperty(video.cap, CV_CAP_PROP_POS_MSEC);
+    bm_process *prefra = new bm_process(pbuf, video.height, video.width, timepos);
     prefra->readallC();
     float preres = 0;
     bm_process *frame;
@@ -43,13 +44,11 @@ key_frame::key_frame(Get_Frame video, CmpWorker *_worker, char *sdir) :
     dxx = bmp = 0;
     for (int i = 0; i < video.num_frame - 5; i += SFRA) {
         worker->output(QString("frame: %1").arg(i));
-        pbuf = video.pop();
-        if (!pbuf)
+        if (!(pbuf = video.pop()))
             break;
-        start = clock();
-        frame = new bm_process(pbuf, video.height, video.width);
+        timepos = (int) cvGetCaptureProperty(video.cap, CV_CAP_PROP_POS_MSEC);
+        frame = new bm_process(pbuf, video.height, video.width, timepos);
         frame->readallC();
-        end = clock();
         float res = distance(prefra, frame);
         worker->output(QString("distance is: %1\n").arg(res));
         if (res < SCENEB) {
@@ -79,32 +78,12 @@ key_frame::~key_frame()
 
 bool key_frame::cp_video(const key_frame &b)
 {
-    int res = 0;
-    for (int i = 0; i < b.flist.size(); i++) {
-        float pot = (float) i / b.flist.size();
-        int st = pot * this->flist.size();
-        float max = -10;
-        for (int j = 0; j < 40; j++) {
-            float temp = 0;
-            if (st + j < this->flist.size()) {
-                temp = distance(this->flist[st + j], b.flist[i]);
-                temp > max ? max = temp : max;
-            }
-            if (st - j > 0) {
-                temp = distance(this->flist[st - j], b.flist[i]);
-                temp > max ? max = temp : max;
-            }
-        }
-        if (max >= SCENEB)
-            res++;
-        worker->output(QString("the %1 %2 %3")
-                       .arg(i)
-                       .arg("frame of b video's distance is:")
-                       .arg(max));
-    }
-    float rres = (float) res / b.flist.size();
-    worker->output(QString("distance of two video: %1").arg(rres));
-    if (rres > KFB)
-        return true;
-    return false;
+    clock_t start;
+    start = clock();
+    FrameListMatcher matcher(flist, dir, b.flist, b.dir, worker);
+    qDebug() << "constructor used " << clock() - start << "ms";
+    start = clock();
+    matcher.solve();
+    qDebug() << "solve used " << clock() - start << "ms";
+    return matcher.isSimilar();
 }

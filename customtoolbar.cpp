@@ -8,7 +8,7 @@ CustomToolBar::CustomToolBar(QWidget *parent)
     QHBoxLayout *toolBarLayout = new QHBoxLayout( this );
     setMouseTracking( true );
     QList<QString> strList;
-    strList << "视频比较" << "直方图查看" << "上传视频" << "浏览网络" << "帮助";
+    strList << "视频比较" << "直方图查看" << "上传视频" << "多视频比较" << "帮助";
     for ( int i = 0, sz = strList.size(); i < sz; ++ i ) {
         QString strImage = QString(":/img/%1.png").arg( i + 1 );
         listCustomButton.append( new CustomToolButton( strImage,

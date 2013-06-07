@@ -17,20 +17,20 @@ bool CmpWorker::cmpTwoFiles(const QString &fa, const QString &fb)
     Get_Frame srcVideo( fa.toLocal8Bit().data() );
     if ( !srcVideo.cap ) {
         output("capture failed");
-        return -1;
+        return false;
     }
     output(QString("srcVideo.num_frame is: %1").arg(srcVideo.num_frame));
-    key_frame srcKeyFrame( srcVideo, this, "" );
+    key_frame srcKeyFrame( srcVideo, this, fa );
     Get_Frame targetVideo( fb.toLocal8Bit().data() );
     if ( !targetVideo.cap ) {
         if (enableOutput)
             output("capture failed");
-        return -1;
+        return false;
     }
     output(QString("targetVideo.num_frame is: %1").arg(targetVideo.num_frame));
-    key_frame targetKeyFrame( targetVideo, this, "" );
+    key_frame targetKeyFrame( targetVideo, this, fb );
     ans = srcKeyFrame.cp_video(targetKeyFrame);
-    output(QString("两视频是: %1").arg(ans ? "相同的" : "不同的"));
+    output(QString("两视频是: %1").arg(ans ? "同源的" : "不同源的"));
 #endif
     return ans;
 }

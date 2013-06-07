@@ -100,7 +100,7 @@ void CustomContentWidget::resizeEvent( QResizeEvent *event )
 void CustomContentWidget::compareVideos()
 {
 #ifdef __changer_debug__
-    QString src = "C:\\movie\\temp1.avi";
+    QString src = "C:\\movie\\temp2.avi";
     QString target = "C:\\movie\\temp2.avi";
 #else
     qDebug() << srcmplayer->getFilePath().toLocal8Bit().data();

@@ -24,7 +24,7 @@ CustomMainWidget::CustomMainWidget(QWidget *parent) :
     myStatusBar->resize(width(), STATUSBAR_HEIGHT);
     mainWidgetLayout->addWidget(myStatusBar);
     mainWidgetLayout->setSpacing(0);
-    mainWidgetLayout->setMargin(5);
+    mainWidgetLayout->setMargin(1);
 
     connect(myToolBar, SIGNAL(showPageAt(int)),
             myContentWidget, SLOT(showPageAt(int)));

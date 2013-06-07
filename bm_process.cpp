@@ -20,6 +20,7 @@ void init_lhsv(int a[10][5][5])
 
 bm_process::~bm_process()
 {
+    cvReleaseImage(&cvp);
 }
 
 bm_process::bm_process(char *pbuf, float pst)
@@ -46,14 +47,17 @@ bm_process::bm_process(char *pbuf)
     int lineByte = (this->width * this->bitcount / 8 + 3) / 4 * 4;    //align to 4 times
 }
 
-bm_process::bm_process(IplImage *cvp, int h, int w)
+bm_process::bm_process(IplImage *_cvp, int h, int w, int timePos)
 {
+    time_pos = timePos;
+
     this->height = h;
     this->width = w;
     this->bitcount = 24;
     this->iskframe = false;
+    this->cvp = cvCreateImage(cvGetSize(_cvp), _cvp->depth, _cvp->nChannels);
+    cvCopyImage(_cvp, cvp);
     this->pbuf = (unsigned char *)cvp->imageData;
-    this->cvp = cvp;
     this->block_size[0] = this->block_size[2]
                       	= this->block_size[6]
                         = this->block_size[8]

@@ -19,11 +19,11 @@ public:
     int bitcount;//bit per pixel(image type)
     bool iskframe;//use at key_frame to decide is key_frame or not
     float pst;
+    int time_pos;
     unsigned char *pbuf;
     IplImage *cvp;
 
-
-    bm_process(IplImage *cvp, int h, int w); //for opencv IplImage
+    bm_process(IplImage *_cvp, int h, int w, int timePos); //for opencv IplImage
     bm_process(char *pbuf, float pst); //read rgb array from a bitmap buffer
     bm_process(char *pbuf);
     ~bm_process();

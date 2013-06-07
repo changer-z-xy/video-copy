@@ -18,17 +18,20 @@
 #include <qedit.h>
 //#include <atlbase.h>
 #include <stdlib.h>
-
-
 #include <time.h>
-#include"cv.h"
-#include"cxcore.h"
-#include"highgui.h"
-#include "opencv.hpp"
 
-#include <bm_process.h>
-#include <get_frame.h>
-#include<key_frame.h>
+#include <cv.h>
+#include <cxcore.h>
+#include <highgui.h>
+#include <opencv.hpp>
+#include <nonfree/nonfree.hpp>
+#include <nonfree/features2d.hpp>
+#include <cvaux.h>
+
+#include "bm_process.h"
+#include "get_frame.h"
+#include "key_frame.h"
+#include "framelistmatcher.h"
 
 #define UNDEFINEDCOLOR -0.5
 #define PI 3.1415926536
