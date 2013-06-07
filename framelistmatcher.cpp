@@ -1,8 +1,7 @@
 #include "framelistmatcher.h"
 
 const float alpha = 0.05;
-const int THRESHOLD_KF = 10;
-const int THRESHOLD_PATH = 0.8;
+const float THRESHOLD_PATH = 0.8;
 const int THRESHOLD_TIME = 20000;
 
 bool compare_desc_func(const GraphNode &a, const GraphNode &b)
@@ -15,18 +14,24 @@ FrameListMatcher::FrameListMatcher(const std::vector <bm_process *> &kfla, const
                                    CmpWorker *worker)
     : worker(worker), kfla(kfla), kflb(kflb), fa(fa), fb(fb)
 {
-    qDebug() << "init start";
+    worker->output(QString("init start"));
     n = kfla.size();
     k = n * alpha;
     k = k > 0 ? k : 1;
     isVisited.resize(k * n, false);
     result_graph.resize(k * n);
 
+    clock_t start = clock();
     init_sift();
+    qDebug() << "init_sift() used: " << clock() - start;
+    start = clock();
     init_sim();
+    qDebug() << "init_sim() used: " << clock() - start;
+    start = clock();
     init_next();
+    qDebug() << "init_next() used: " << clock() - start;
 
-    qDebug() << "init end";
+    worker->output(QString("init end"));
 }
 
 void FrameListMatcher::init_sift()
@@ -44,7 +49,7 @@ void FrameListMatcher::init_sift()
         cv::Mat mtxa(grayimg);
         sift(mtxa, cv::Mat(), keypoints_a[i], descriptor_a[i]);
         cvReleaseImage(&grayimg);
-        qDebug() << "sift(kfla[" << i << "]) done";
+        worker->output(QString("sift(kfla[%1]) done").arg(i));
     }
     for (int i = 0; i < kflb.size(); ++i) {
         grayimg = cvCreateImage(cvGetSize(kflb[i]->cvp), IPL_DEPTH_8U, 1);
@@ -52,7 +57,7 @@ void FrameListMatcher::init_sift()
         cv::Mat mtxb(grayimg);
         sift(mtxb, cv::Mat(), keypoints_b[i], descriptor_b[i]);
         cvReleaseImage(&grayimg);
-        qDebug() << "sift(kflb[" << i << "]) done";
+        worker->output(QString("sift(kflb[%1]) done").arg(i));
     }
 }
 
@@ -66,7 +71,8 @@ void FrameListMatcher::init_sim()
             sim_frame[j].ti = kfla[i]->time_pos;
             sim_frame[j].tj = kflb[j]->time_pos;
             sim_frame[j].sim = similaraty(sim_frame[j]);
-            qDebug() << "src kframe " << i << ", target kframe " << j << ", sim is: " << sim_frame[j].sim;
+            worker->output(QString("src kframe %1, target kframe %2, sim is: %3")
+                    .arg(i).arg(j).arg(sim_frame[j].sim));
         }
         std::sort(sim_frame.begin(), sim_frame.end(), compare_desc_func);
         sim_frame.resize(k);
@@ -101,8 +107,8 @@ float FrameListMatcher::similaraty(GraphNode &sim_frame)
     int i = sim_frame.i;
     int j = sim_frame.j;
     matcher.match(descriptor_a[i], descriptor_b[j], sim_frame.matches);
-    qDebug() << "matches.size() is: " << sim_frame.matches.size() <<
-                ", keypoints_b.size() is: " << keypoints_b[j].size();
+    worker->output(QString("matches.size() is: %1, keypoints_b.size() is: %2")
+                   .arg(sim_frame.matches.size()).arg(keypoints_b[j].size()));
     // fa是查询视频的帧，也就是可能被修改了的视频，所以应除以视频的帧fb的关键点数量
     float ans = (float)(sim_frame.matches.size()) / (keypoints_a[i].size() + keypoints_b[j].size()) * 2;
     return ans;// 0 ~ 1
@@ -110,10 +116,10 @@ float FrameListMatcher::similaraty(GraphNode &sim_frame)
 
 void FrameListMatcher::solve()
 {
-    qDebug() << "solve() start";
+    worker->output("solve() start");
     search_paths();
     calc_sim_paths();
-    qDebug() << "solve() end";
+    worker->output("solve() end");
 }
 
 void FrameListMatcher::search_paths()
@@ -134,17 +140,16 @@ void FrameListMatcher::search_paths()
             cv::Mat imga(kfla[ia]->cvp);
             cv::Mat imgb(kflb[ib]->cvp);
             cv::Mat imgMatches;
-            qDebug() << "drawing matches";
+            worker->output("drawing matches");
             cv::drawMatches(imga, keypoints_a[ia], imgb, keypoints_b[ib],
                             result_graph[tmp].matches, imgMatches);
-            QDir dir("result");
-            if (!dir.exists())
+            QDir dir(".");
+            if (!dir.exists("result"))
                 dir.mkdir("result");
-            QString fn("%1%2_%3%4.jpg");
-            fn.arg(fa).arg(ia).arg(fb).arg(ib);
-            qDebug() << fn;
+            QString fn = QString("result/%1_%2.jpg").arg(ia).arg(ib);
+            worker->output(fn);
             cv::imwrite(fn.toLocal8Bit().data(), imgMatches);
-            qDebug() << "drawing done";
+            worker->output("drawing done");
             tmp = result_graph[tmp].path_next;
         }
         paths.push_back(path);
@@ -162,7 +167,7 @@ void FrameListMatcher::calc_sim_paths()
         tmp_sim /= paths[i].size();
         tmp_sim *= log(paths[i].size() + 1);
         sim_paths[i] = tmp_sim;
-        qDebug() << "sim_paths[" << i << "] is " << sim_paths[i];
+        worker->output(QString("sim_paths[%1] is %2").arg(i).arg(sim_paths[i]));
     }
 }
 
@@ -170,7 +175,7 @@ bool FrameListMatcher::isSimilar()
 {
     for (size_t i = 0; i < sim_paths.size(); ++i) {
         if (sim_paths[i] > THRESHOLD_PATH) {
-            qDebug() << "sim_paths[" << i << "] is: " << sim_paths[i];
+            worker->output(QString("sim_paths[%1] is: %2").arg(i).arg(sim_paths[i]));
             return true;
         }
     }

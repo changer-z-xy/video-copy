@@ -10,8 +10,7 @@
 #include "cmpworker.h"
 
 extern const float alpha;
-extern const int THRESHOLD_KF;
-extern const int THRESHOLD_PATH;
+extern const float THRESHOLD_PATH;
 
 struct GraphNode {
     float sim;

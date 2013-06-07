@@ -17,7 +17,7 @@ bool CmpWorker::cmpTwoFiles(const QString &fa, const QString &fb)
     Get_Frame srcVideo( fa.toLocal8Bit().data() );
     if ( !srcVideo.cap ) {
         output("capture failed");
-        return -1;
+        return false;
     }
     output(QString("srcVideo.num_frame is: %1").arg(srcVideo.num_frame));
     key_frame srcKeyFrame( srcVideo, this, fa );
@@ -25,7 +25,7 @@ bool CmpWorker::cmpTwoFiles(const QString &fa, const QString &fb)
     if ( !targetVideo.cap ) {
         if (enableOutput)
             output("capture failed");
-        return -1;
+        return false;
     }
     output(QString("targetVideo.num_frame is: %1").arg(targetVideo.num_frame));
     key_frame targetKeyFrame( targetVideo, this, fb );
