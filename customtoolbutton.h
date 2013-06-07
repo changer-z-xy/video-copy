@@ -14,19 +14,23 @@ private:
     QString strInfo;
     bool isPressed;
     bool isOver;
+    int pressStyle;
 public:
     explicit CustomToolButton( const QString &strImage,
-                           const QString &strInfo,
-                           Qt::ToolButtonStyle style = Qt::ToolButtonIconOnly,
-                           QWidget *parent = 0 );
+                               const QString &strInfo,
+                               Qt::ToolButtonStyle style = Qt::ToolButtonIconOnly,
+                               int _pressStyle = 1,
+                               QWidget *parent = 0 );
+    void setPressed( bool pressed );
 signals:
-//    void bePressed( void *self );
+    void bePressed( CustomToolButton *self );
+
 protected:
     void paintEvent( QPaintEvent *event );
     void mousePressEvent( QMouseEvent *event );
     void enterEvent( QEvent *event );
     void leaveEvent( QEvent *event );
-    void mouseReleaseEvent( QMouseEvent *event );
+//    void mouseReleaseEvent( QMouseEvent *event );
 };
 
 #endif // CUSTOMBUTTON_H

@@ -3,33 +3,32 @@
 
 #include <QWidget>
 #include <QVBoxLayout>
-#include <QToolBar>
-#include <QStatusBar>
 #include <QDebug>
 #include <QLinearGradient>
-#include "customtitlebar.h"
-#include "customtoolbar.h"
-#include "customcontentwidget.h"
-#include "customstatusbar.h"
+#include <QFrame>
+#include <QBitmap>
+#include <QPainter>
+#include <QMouseEvent>
+#include <QPaintEvent>
 
 class CustomWidget : public QFrame
 {
     Q_OBJECT
 private:
-    CustomTitleBar *myTitleBar;
-    CustomToolBar *myToolBar;
-    CustomContentWidget *myContentWidget;
-    CustomStatusBar *myStatusBar;
-    unsigned int myResizeFlag;
-    QPoint cursor;
+    QPoint preCursorPos;
+    QPoint preWidgetPos;
+    int dir;
 public:
     CustomWidget(QWidget *parent = 0);
-    ~CustomWidget();
+    void setCursorStyle(int _dir);
+    void borderResize(int dx, int dy);
+    void borderResize(const QPoint &curPos);
+    int calcDir(int x, int y);
 protected:
-    void paintEvent(QPaintEvent *);
-    void mouseReleaseEvent( QMouseEvent *event );
+    void paintEvent(QPaintEvent *event);
     void mouseMoveEvent( QMouseEvent *event );
     void mousePressEvent( QMouseEvent *event );
+    void mouseReleaseEvent(QMouseEvent *event);
 public slots:
     void showMaxRestore();
 };

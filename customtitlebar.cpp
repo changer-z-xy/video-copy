@@ -1,53 +1,49 @@
 #include "customtitlebar.h"
 
-CustomTitleBar::CustomTitleBar( QWidget *parent ) :
-    parent( parent )
+const int TITLEBAR_HEIGHT = 30;
+
+CustomTitleBar::CustomTitleBar( QWidget *parent, const QString &title ) :
+    parent(parent)
 {
-    // set fixed height
-    int fixedHeight = 30;
-    setFixedHeight( fixedHeight );
+    QHBoxLayout *titleBarLayout = new QHBoxLayout( this );
     setMouseTracking( true );
     // set icon
     QPixmap icon( ":/img/icon.png" );
     iconLabel = new QLabel( this );
-    iconLabel->setPixmap( icon.scaled( fixedHeight, fixedHeight ) );
-    // set text title
-    parent->setWindowTitle( "基于内容的视频版权注册与认证系统");
-    titleLabel = new QLabel( parent->windowTitle() );
+    iconLabel->setPixmap( icon.scaled( TITLEBAR_HEIGHT, TITLEBAR_HEIGHT ) );
+    titleBarLayout->addWidget( iconLabel );
+    titleLabel = new QLabel(title);
+    titleBarLayout->addWidget( titleLabel );
+    titleBarLayout->addStretch();
     // following three button didn't show :/img/icon.png
     // because it expired after setIcon( *Pix )
     // set min button
-    minButton = new CustomToolButton( ":/img/icon.png", "" );
+    minButton = new CustomToolButton(":/img/icon.png", "", Qt::ToolButtonIconOnly, 2, this);
     QPixmap minPix = style()->standardPixmap( QStyle::SP_TitleBarMinButton );
     minButton->setIcon( minPix );
     minButton->setIconSize( QSize( 50, 30 ) );
+    titleBarLayout->addWidget( minButton );
     // set max/restore button
-    maxButton = new CustomToolButton( ":/img/icon.png", "" );
+    maxButton = new CustomToolButton( ":/img/icon.png", "", Qt::ToolButtonIconOnly, 2, this);
     QPixmap maxPix = style()->standardPixmap( QStyle::SP_TitleBarMaxButton );
     maxButton->setIconSize( QSize( 50, 30 ) );
     maxButton->setIcon( maxPix );
+    titleBarLayout->addWidget( maxButton );
     // set close button
-    closeButton = new CustomToolButton( ":/img/icon.png", "" );
+    closeButton = new CustomToolButton( ":/img/icon.png", "", Qt::ToolButtonIconOnly, 2, this);
     QPixmap closePix = style()->standardPixmap( QStyle::SP_TitleBarCloseButton );
     closeButton->setIcon( closePix );
     closeButton->setIconSize( QSize( 50, 30 ) );
-
-    QHBoxLayout *titleBarLayout = new QHBoxLayout( this );
-    titleBarLayout->addWidget( iconLabel );
-    titleBarLayout->addWidget( titleLabel );
-    titleBarLayout->addStretch();
-    titleBarLayout->addWidget( minButton );
-    titleBarLayout->addWidget( maxButton );
     titleBarLayout->addWidget( closeButton );
-    titleBarLayout->setSpacing( 0 );
-    titleBarLayout->setContentsMargins(0,0,0,0);
+    titleBarLayout->setSpacing(0);
+    titleBarLayout->setMargin(0);
 
-    connect( minButton, SIGNAL(clicked()),
-             parent, SLOT(showMinimized()) );
-    connect( maxButton, SIGNAL(clicked()),
-             parent, SLOT(showMaxRestore()) );
-    connect( closeButton, SIGNAL(clicked()),
-             parent, SLOT(close()) );
+    connect(minButton, SIGNAL(clicked()),
+            this, SIGNAL(minButtonClicked()));
+    connect(maxButton, SIGNAL(clicked()),
+            this, SIGNAL(maxButtonClicked()));
+    connect(closeButton, SIGNAL(clicked()),
+            this, SIGNAL(closeButtonClicked()));
 }
 
 CustomTitleBar::~CustomTitleBar()

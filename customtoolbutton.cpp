@@ -1,10 +1,11 @@
 #include "customtoolbutton.h"
 
 CustomToolButton::CustomToolButton( const QString &strImage,
-                            const QString &strInfo,
-                            Qt::ToolButtonStyle style,
-                            QWidget *parent ) :
-    QToolButton( parent ), strImage( strImage ), strInfo( strInfo )
+                                    const QString &strInfo,
+                                    Qt::ToolButtonStyle style,
+                                    int _pressStyle,
+                                    QWidget *parent ) :
+    QToolButton( parent ), strImage( strImage ), strInfo( strInfo ), pressStyle(_pressStyle)
 {
     isOver = isPressed = false;
     setToolButtonStyle( style );
@@ -16,13 +17,19 @@ CustomToolButton::CustomToolButton( const QString &strImage,
     setStyleSheet( "CustomToolButton {"
                    "border: 0px;"
                    "}");
+}
 
+void CustomToolButton::setPressed( bool pressed )
+{
+    if (pressStyle == 1)
+        isPressed = pressed;
+    update();
 }
 
 void CustomToolButton::mousePressEvent( QMouseEvent *event )
 {
     if ( event->button() == Qt::LeftButton ) {
-        isPressed = true;
+        emit bePressed( this );
     }
     QToolButton::mousePressEvent( event );
 }
@@ -41,25 +48,19 @@ void CustomToolButton::leaveEvent( QEvent *event )
     QToolButton::leaveEvent( event );
 }
 
-void CustomToolButton::mouseReleaseEvent( QMouseEvent *event )
-{
-    isPressed = false;
-    QToolButton::mouseReleaseEvent( event );
-}
-
 void CustomToolButton::paintEvent( QPaintEvent *event )
 {
     QPainter painter( this );
 
     int startOpacity = 0, medianOpacity = 0, endOpacity = 0;
-    if ( isPressed ) {
-        startOpacity = 50;
-        medianOpacity = 100;
-        endOpacity = 80;
-    } else if ( isOver ) {
+    if ( isOver ) {
         startOpacity = 150;
         medianOpacity = 180;
         endOpacity = 200;
+    } else if ( isPressed ) {
+        startOpacity = 50;
+        medianOpacity = 100;
+        endOpacity = 80;
     }
 
     QLinearGradient mainWidgetGradient( rect().topLeft(), rect().bottomRight() );

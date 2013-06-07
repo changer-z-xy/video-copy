@@ -1,64 +1,23 @@
 #include "customwidget.h"
-#include <QBitmap>
-#include <QPainter>
 
 CustomWidget::CustomWidget(QWidget *parent)
     : QFrame(parent)
 {
     // set no system title bar
     setWindowFlags( Qt::FramelessWindowHint );
-    // set mouse tracking
     setMouseTracking( true );
-    // set myResizeFlag with 0
-    myResizeFlag = 0;
-
-    QVBoxLayout *mainLayout = new QVBoxLayout( this );
-    // add myTitleBar
-    myTitleBar = new CustomTitleBar( this );
-    mainLayout->addWidget( myTitleBar );
-    // add myToolBar
-    myToolBar = new CustomToolBar( this );
-    mainLayout->addWidget( myToolBar );
-    // add myContentWidget
-    myContentWidget = new CustomContentWidget( this );
-    mainLayout->addWidget( myContentWidget );
-    // add myStatusBar
-    myStatusBar = new CustomStatusBar( this );
-    mainLayout->addWidget( myStatusBar );
-    // set mainLayout no spacing and margin
-    mainLayout->setSpacing( 0 );
-    mainLayout->setContentsMargins(0,0,0,0);
-    /* this stylesheet didn't show because paintEvent() has
-    ** repaint the widget
-    **/
-//    setStyleSheet( "CustomWidget {"
-//                   "border-image:url(:/img/background.jpg);"
-//                   "}" );
-    setMinimumWidth( 850 );
-    setMinimumHeight( 600 );
+    dir = 0;
 }
 
-CustomWidget::~CustomWidget()
+void CustomWidget::paintEvent(QPaintEvent *event)
 {
-    
-}
-
-void CustomWidget::paintEvent(QPaintEvent *)
-{
-    QBitmap objBitmap( size() );
-    QPainter *painter = new QPainter( this );
     QLinearGradient mainWidgetGradient( rect().topLeft(), rect().bottomRight() );
     mainWidgetGradient.setColorAt( 0, QColor( 0, 136, 204, 180 ) );
     mainWidgetGradient.setColorAt( 0.5, QColor( 0, 109, 204, 255 ) );
     mainWidgetGradient.setColorAt( 1, QColor( 0, 68, 205, 220 ) );
-    painter->fillRect( rect(), mainWidgetGradient );
-    painter->end();
-    painter->begin( &objBitmap );
-    painter->fillRect( rect(), Qt::white );
-    painter->setBrush( QColor( 0, 0, 0 ) );
-    painter->drawRoundedRect( rect(), 10, 10 );
-    setMask( objBitmap );
-    painter->end();
+    QPainter painter(this);
+    painter.fillRect( rect(), mainWidgetGradient );
+    QFrame::paintEvent(event);
 }
 
 void CustomWidget::showMaxRestore()
@@ -74,18 +33,105 @@ void CustomWidget::showMaxRestore()
 void CustomWidget::mousePressEvent(QMouseEvent *event)
 {
     if ( event->button() == Qt::LeftButton ) {
-        cursor = event->globalPos() - pos();
+        preCursorPos = event->globalPos();
+        preWidgetPos = pos();
+        dir = calcDir(event->x(), event->y());
     }
+    QFrame::mousePressEvent(event);
+}
+
+void CustomWidget::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+        dir = 0;
+    }
+    QFrame::mouseReleaseEvent(event);
 }
 
 void CustomWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    if ( !isMaximized() && ( event->buttons() & Qt::LeftButton ) ) {
-        move( event->globalPos() - cursor );
+    if (!isMaximized()) {
+        setCursorStyle(calcDir(event->x(), event->y()));
+        if (event->buttons() & Qt::LeftButton) {
+            if (dir == 0) {
+                move(event->globalPos() - preCursorPos + preWidgetPos);
+            } else {
+                int dx = event->globalX() - preCursorPos.x();
+                int dy = event->globalY() - preCursorPos.y();
+                borderResize(event->globalPos());
+            }
+        }
+    }
+    QFrame::mouseMoveEvent(event);
+}
+
+int CustomWidget::calcDir(int x, int y) {
+    int tmp = 0;
+    if (x < 5) {
+        tmp += 1;
+    } else if (x > width() - 5) {
+        tmp += 2;
+    }
+    if (y < 5) {
+        tmp += 4;
+    } else if (y > height() - 5) {
+        tmp += 8;
+    }
+    return tmp;
+}
+
+void CustomWidget::setCursorStyle(int _dir)
+{
+    switch (_dir) {
+    case 1:
+    case 2:
+        setCursor(Qt::SizeHorCursor);
+        break;
+    case 4:
+    case 8:
+        setCursor(Qt::SizeVerCursor);
+        break;
+    case 1 | 4:
+    case 2 | 8:
+        setCursor(Qt::SizeFDiagCursor);
+        break;
+    case 1 | 8:
+    case 2 | 4:
+        setCursor(Qt::SizeBDiagCursor);
+        break;
+    default:
+        setCursor(Qt::ArrowCursor);
     }
 }
 
-void CustomWidget::mouseReleaseEvent( QMouseEvent *event )
+void CustomWidget::borderResize(int dx, int dy)
 {
+    QRect tmp = geometry();
+    if (dir & 1)
+        tmp.setLeft(tmp.left() + dx);
+    if (dir & 2)
+        tmp.setRight(tmp.right() + dx);
+    if (dir & 4)
+        tmp.setTop(tmp.top() + dy);
+    if (dir & 8)
+        tmp.setBottom(tmp.bottom() + dy);
+    if (tmp.width() < minimumWidth() || tmp.height() < minimumHeight())
+        return;
+    setGeometry(tmp);
+}
 
+void CustomWidget::borderResize(const QPoint &curPos)
+{
+    QRect tmp = geometry();
+    if (dir & 1)
+        tmp.setLeft(curPos.x());
+    if (dir & 2)
+        tmp.setRight(curPos.x());
+    if (dir & 4)
+        tmp.setTop(curPos.y());
+    if (dir & 8)
+        tmp.setBottom(curPos.y());
+    if (tmp.width() < minimumWidth() || tmp.height() < minimumHeight())
+        return;
+    setGeometry(tmp);
 }

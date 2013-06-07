@@ -6,6 +6,8 @@
 #include <QPainter>
 #include "customtoolbutton.h"
 
+extern const int TOOLBAR_HEIGHT;
+
 class CustomToolBar : public QWidget
 {
     Q_OBJECT
@@ -13,13 +15,10 @@ private:
     QList<CustomToolButton*> listCustomButton;
 public:
     explicit CustomToolBar(QWidget *parent = 0);
-    ~CustomToolBar();
 signals:
-    
+    void showPageAt( int index );
 public slots:
-    
-protected:
-    void paintEvent( QPaintEvent *event );
+    void childPressed( CustomToolButton *child );
 };
 
 #endif // CUSTOMTOOLBAR_H

@@ -1,8 +1,10 @@
 #include "customstatusbar.h"
 
-CustomStatusBar::CustomStatusBar(QObject *parent)
+const int STATUSBAR_HEIGHT = 30;
+
+CustomStatusBar::CustomStatusBar(QWidget *parent) : QWidget(parent)
 {
-    setFixedHeight( 30 );
+    setMouseTracking(true);
 }
 
 CustomStatusBar::~CustomStatusBar()
@@ -12,4 +14,5 @@ CustomStatusBar::~CustomStatusBar()
 
 void CustomStatusBar::paintEvent( QPaintEvent *event )
 {
+    QWidget::paintEvent(event);
 }

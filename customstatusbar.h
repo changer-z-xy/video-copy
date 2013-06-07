@@ -4,11 +4,13 @@
 #include <QStatusBar>
 #include <QPainter>
 
+extern const int STATUSBAR_HEIGHT;
+
 class CustomStatusBar : public QWidget
 {
     Q_OBJECT
 public:
-    explicit CustomStatusBar(QObject *parent = 0);
+    explicit CustomStatusBar(QWidget *parent = 0);
     ~CustomStatusBar();
 signals:
     

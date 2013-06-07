@@ -6,5 +6,9 @@
         <file>img/2.png</file>
         <file>img/5.png</file>
         <file>img/icon.png</file>
+        <file>img/play.png</file>
+        <file>img/pause.png</file>
+        <file>img/stop.png</file>
+        <file>img/open.png</file>
     </qresource>
 </RCC>

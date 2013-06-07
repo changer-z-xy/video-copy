@@ -1,7 +1,7 @@
-#include "histgramwidget.h"
+#include "histogramwidget.h"
 
-HistgramWidget::HistgramWidget( QWidget *parent, int *histgram = NULL ):
-    QWidget( parent ), histArray( histgram )
+HistogramWidget::HistogramWidget( QWidget *parent, int *histogram = NULL ):
+    QGraphicsView( parent ), histArray( histogram )
 {
     setFixedSize( 600, 400 );
     segLength = 10;
@@ -10,22 +10,22 @@ HistgramWidget::HistgramWidget( QWidget *parent, int *histgram = NULL ):
     spaceLength = 0;
     colLength = ( width() - cntSegs * spaceLength ) / cntSegs;
 
-    if ( histgram ) {
+    if ( histogram ) {
         for ( size_t i = 0; i < 250; ++ i ) {
             histSeg[ i ] = 0;
             histSeg[ i / segLength ] += histArray[ i ];
         }
     } else {
-        histgram = new int[ 250 ];
+        histogram = new int[ 250 ];
     }
 
 }
 
-HistgramWidget::~HistgramWidget()
+HistogramWidget::~HistogramWidget()
 {
 }
 
-void HistgramWidget::paintEvent( QPaintEvent *event )
+void HistogramWidget::paintEvent( QPaintEvent *event )
 {
     QPainter *myPainter = new QPainter( this );
     myPainter->fillRect( rect(), Qt::white );
@@ -48,4 +48,5 @@ void HistgramWidget::paintEvent( QPaintEvent *event )
         myPainter->drawText( i * colLength + spaceLength, tmpY - 20,
                              QString("%1").arg(histSeg[ i ]) );
     }
+    myPainter->end();
 }
