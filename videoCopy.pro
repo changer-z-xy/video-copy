@@ -33,7 +33,8 @@ SOURCES += main.cpp \
     customcontentwidget.cpp \
     mplayerwidget.cpp \
     key_frame.cpp \
-    customtreewidget.cpp
+    customtreewidget.cpp \
+    framelistmatcher.cpp
 
 HEADERS  += cmpevent.h \
     cmpconsignor.h \
@@ -57,7 +58,8 @@ HEADERS  += cmpevent.h \
     videoCopy.h \
     mplayerwidget.h \
     key_frame.h \
-    customtreewidget.h
+    customtreewidget.h \
+    framelistmatcher.h
 
 INCLUDEPATH += C:\opencv\install\include \
 				C:\opencv\install\include\opencv \
@@ -66,7 +68,9 @@ INCLUDEPATH += C:\opencv\install\include \
 LIBS += -LC:/opencv/install/lib \
 		-llibopencv_core244d \
 		-llibopencv_highgui244d \
-		-llibopencv_imgproc244d
+		-llibopencv_imgproc244d \
+		-llibopencv_nonfree244d \
+		-llibopencv_features2d244d
 
 RESOURCES += \
     resources.qrc
